@@ -18,7 +18,7 @@
 		<script src="../three.js-master/build/three.js"></script>
 		<script src="stats.js"></script>
 		<script src="three.js-master/examples/js/controls/OrbitControls.js"></script>
-
+		<script src="three.js-master/examples/js/libs/dat.gui.min.js"></script>
 		<script>
 			var container, stats;
 			var camera, scene, projector, renderer;
@@ -50,18 +50,7 @@
 				var light = new THREE.DirectionalLight( 0xffefef, 1.5 );
 				light.position.set( -1, -1, -1 ).normalize();
 				scene.add( light );
-				var loader = new THREE.JSONLoader();
-				loader.load( "horse.js", function( geometry ) {
-					mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( {
-						vertexColors: THREE.FaceColors,
-						morphTargets: true
-					} ) );
-					mesh.scale.set( 1.5, 1.5, 1.5 );
-					scene.add( mesh );
-					mixer = new THREE.AnimationMixer( mesh );
-					var clip = THREE.AnimationClip.CreateFromMorphTargetSequence( 'gallop', geometry.morphTargets, 30 );
-					mixer.clipAction( clip ).setDuration( 1 ).play();
-				} );
+
 				//
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -72,6 +61,8 @@
 				container.appendChild( stats.dom );
 				//
 				window.addEventListener( 'resize', onWindowResize, false );
+
+				createPanel();
 			}
 			function onWindowResize() {
 				camera.aspect = window.innerWidth / window.innerHeight;
@@ -83,6 +74,53 @@
 				requestAnimationFrame( animate );
 				render();
 				stats.update();
+			}
+			function createPanel() {
+				var panel = new dat.GUI( { width: 310 } );
+				var folder1 = panel.addFolder( 'Add model' );
+				settings = {
+					'horse':            		addHorse,
+					'flamingo':         		addFlaming,
+					'parrot': 							addParrot,
+					'stork':								addStork
+
+				};
+				folder1.add( settings, 'horse' );
+				folder1.add( settings,  'flamingo' );
+				folder1.add( settings,  'parrot' );
+				folder1.add( settings,  'stork' );
+				folder1.open();
+
+			}
+			function addModel(model){
+				var loader = new THREE.JSONLoader();
+				loader.load( "three.js-master/examples/models/animated/"+ model+".js", function( geometry ) {
+					mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( {
+						vertexColors: THREE.FaceColors,
+						morphTargets: true
+					} ) );
+					mesh.scale.set( 1.5, 1.5, 1.5 );
+					scene.add( mesh );
+					mixer = new THREE.AnimationMixer( mesh );
+					var clip = THREE.AnimationClip.CreateFromMorphTargetSequence( 'move', geometry.morphTargets, 30 );
+					mixer.clipAction( clip ).setDuration( 1 ).play();
+				} );
+			}
+
+			function addHorse(){
+				addModel("horse");
+			}
+
+			function addFlaming(){
+				addModel("flamingo");
+			}
+
+			function addParrot(){
+				addModel("parrot");
+			}
+
+			function addStork(){
+				addModel("stork");
 			}
 			var radius = 600;
 			var theta = 0;
@@ -99,6 +137,7 @@
 				}
 				renderer.render( scene, camera );
 			}
+
 		</script>
 
 	</body>
