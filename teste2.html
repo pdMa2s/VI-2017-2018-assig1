@@ -4,14 +4,6 @@
 		<title>three.js webgl - morph targets - horse</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<style>
-			body {
-				font-family: Monospace;
-				background-color: #f0f0f0;
-				margin: 0px;
-				overflow: hidden;
-			}
-		</style>
 	</head>
 	<body>
 
@@ -23,6 +15,7 @@
 			var container, stats;
 			var camera, scene, projector, renderer;
 			var mesh, mixer;
+			var clock = new THREE.Clock();
 			init();
 			createGround();
 			animate();
@@ -35,16 +28,16 @@
 				//camera
 				var aspect = window.innerWidth / window.innerHeight;
 				camera = new THREE.PerspectiveCamera(50, aspect, 1, 10000);
-				camera.position.y = 300;
-				camera.position.z = 500;
+				camera.position.y = 200;
+				camera.position.z = 700;
 
-				camera.target = new THREE.Vector3(0, 150, 0);
+
 
 				scene = new THREE.Scene();
 				scene.background = new THREE.Color( 0xf0f0f0 );
 
 				//controls
-				var controls = new THREE.OrbitControls(camera);
+				//var controls = new THREE.OrbitControls(camera);
 
 				//light
 				var light = new THREE.DirectionalLight( 0xefefff, 1.5 );
@@ -65,7 +58,7 @@
 
 
 					mesh.scale.set( 1.5, 1.5, 1.5 );
-					mesh.rotation.y = Math.PI / 2;
+					//mesh.rotation.y = Math.PI / 2;
 					scene.add(mesh);
 
 					//animation
@@ -73,7 +66,6 @@
 					var clip = THREE.AnimationClip.CreateFromMorphTargetSequence( 'gallop', geometry.morphTargets, 30 );
 					mixer.clipAction( clip ).setDuration( 1 ).play();
 				} );
-
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -89,6 +81,7 @@
 
 
 			function createGround() {
+
 				var textureLoader = new THREE.TextureLoader();
 				var texture1 = textureLoader.load( "crate.gif" );
 				var material1 = new THREE.MeshPhongMaterial( { color: 0xffffff, map: texture1 } );
@@ -100,26 +93,19 @@
 				mesh1.rotation.x = - Math.PI / 2;
 				mesh1.scale.set(1000, 1000, 1000);
 				scene.add(mesh1);
+				/**
+				// FLOOR
+				var floorTexture = new THREE.ImageUtils.loadTexture( 'checkerboard.jpg' );
+				floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+				floorTexture.repeat.set( 10, 10 );
+				var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } );
+				var floorGeometry = new THREE.PlaneBufferGeometry( 10000,10000  );
+				var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+				floor.position.y = -0.5;
+				floor.rotation.x = Math.PI / 2;
+				scene.add(floor);
+				*/
 			}
-
-
-			/**
-			function onDocumentKeyDown(event) {
-	    	var keyCode = event.which;
-
-				if (keyCode == 87) {
-					mesh.position.z += 100;
-				}
-
-				else if (keyCode == 83) {
-					mesh.position.z -= 100;
-				}
-
-		 		render();
-			}
-			document.addEventListener("keydown", onDocumentKeyDown, false);
-			*/
-
 
 			function onWindowResize() {
 				camera.aspect = window.innerWidth / window.innerHeight;
@@ -127,13 +113,119 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 			}
 
+			var moving = false;
+			var key = '';
+			function onDocumentKeyDown(event) {
+				var keyCode = event.which;
+				switch (keyCode) {
 
-			function animate() {
-				requestAnimationFrame(animate);
+					case 87:
+						key = 'W';
+						moving = true;
+						break;
+
+					case 83:
+						key = 'S';
+						moving = true;
+						break;
+
+					case 81:
+						key = 'Q';
+						moving = true;
+						break;
+
+					case 69:
+						key = 'E';
+						moving = true;
+						break;
+
+					case 65:
+						key = 'A';
+						moving = true;
+						break;
+
+					case 68:
+						key = 'D';
+						moving = true;
+						break;
+
+					case 82:
+						key = 'R';
+						moving = true;
+						break;
+
+					case 70:
+						key = 'F';
+						moving = true;
+						break;
+				}
+
 				render();
-				stats.update();
 			}
+			document.addEventListener("keydown", onDocumentKeyDown, false);
 
+			function onDocumentKeyUp(event) {
+				moving = false;
+				render();
+			}
+			document.addEventListener("keyup", onDocumentKeyUp, false);
+
+var mesh;
+
+			function update()
+			{
+				var delta = clock.getDelta(); // seconds.
+				var moveDistance = 1000 * delta; // 200 pixels per second
+				var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
+
+				// local transformations
+
+
+				if (mesh) { //ver se existe objecto cavalo
+					if (moving){
+						if ( key == 'W'){
+							mesh.position.z -=moveDistance;
+						}
+						if ( key == 'S'){
+							mesh.position.z += moveDistance;
+						}
+
+						if ( key == 'Q'){
+							mesh.position.x -= moveDistance;
+						}
+
+						if ( key == 'E'){
+							mesh.position.x += moveDistance;
+						}
+						if ( key == 'A'){
+							mesh.rotateOnAxis(new THREE.Vector3(0,1,0), rotateAngle);
+						}
+
+						if ( key == 'D'){
+							mesh.rotateOnAxis(new THREE.Vector3(0,1,0), -rotateAngle);
+						}
+
+						if ( key == 'R'){
+							mesh.rotateOnAxis(new THREE.Vector3(1,0,0), rotateAngle);
+						}
+
+						if ( key == 'F'){
+							mesh.rotateOnAxis(new THREE.Vector3(1,0,0), -rotateAngle);
+						}
+				}
+
+				// rotate left/right/up/down
+
+				var relativeCameraOffset = new THREE.Vector3(0,200,600);
+
+				var cameraOffset = relativeCameraOffset.applyMatrix4(mesh.matrixWorld);
+
+				camera.position.x = cameraOffset.x;
+				camera.position.y = cameraOffset.y;
+				camera.position.z = cameraOffset.z;
+				camera.lookAt(mesh.position);
+			}
+		}
 
 			var radius = 600;
 			var theta = 0;
@@ -143,16 +235,23 @@
 				theta += 0.1;
 				//camera.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
 				//camera.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
-				camera.lookAt( camera.target );
 
 				if ( mixer ) {
 					var time = Date.now();
 					mixer.update( ( time - prevTime ) * 0.001 );
 					prevTime = time;
 				}
-
 				renderer.render( scene, camera );
 			}
+
+			function animate() {
+				requestAnimationFrame(animate);
+				render();
+				update();
+				stats.update();
+			}
+
+
 		</script>
 
 	</body>
