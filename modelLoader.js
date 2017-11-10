@@ -1,5 +1,5 @@
 var mixers = [];
-
+var objects = [];
 
 function addModel(model){
   var loader = new THREE.JSONLoader();
@@ -9,6 +9,7 @@ function addModel(model){
       morphTargets: true
     } ) );
     mesh.scale.set( 1.5, 1.5, 1.5 );
+    objects.push(mesh);
     scene.add( mesh );
     mixers.push(new THREE.AnimationMixer( mesh ));
     var clip = THREE.AnimationClip.CreateFromMorphTargetSequence( 'move', geometry.morphTargets, 30 );
