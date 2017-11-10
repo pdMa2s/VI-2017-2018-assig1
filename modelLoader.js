@@ -13,7 +13,6 @@ function addModel(model){
     mixers.push(new THREE.AnimationMixer( mesh ));
     var clip = THREE.AnimationClip.CreateFromMorphTargetSequence( 'move', geometry.morphTargets, 30 );
     mixers[mixers.length-1].clipAction( clip ).setDuration( 1 ).play();
-
   } );
 }
 
