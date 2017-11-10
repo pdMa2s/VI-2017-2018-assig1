@@ -16,37 +16,44 @@
 	<body>
 
 		<script src="three.js-master/build/three.js"></script>
-		<script src="stats.js"></script>
+		<script src="three.js-master/examples/js/libs/stats.min.js"></script>
 		<script src="three.js-master/examples/js/controls/OrbitControls.js"></script>
-
+		<script src="three.js-master/examples/js/libs/dat.gui.min.js"></script>
+		<script src="modelLoader.js"></script>
 		<script>
-			var container, stats;
+			var stats;
 			var camera, scene, projector, renderer;
-			var mesh, mixer;
+			var mesh;
+
 			init();
-			createGround();
 			animate();
 
 
 			function init() {
-				container = document.createElement('div');
-				document.body.appendChild(container);
-
-				//camera
-				var aspect = window.innerWidth / window.innerHeight;
-				camera = new THREE.PerspectiveCamera(50, aspect, 1, 10000);
-				camera.position.y = 300;
-				camera.position.z = 500;
-
-				camera.target = new THREE.Vector3(0, 150, 0);
-
+				// SCENE
 				scene = new THREE.Scene();
 				scene.background = new THREE.Color( 0xf0f0f0 );
 
-				//controls
+				// CAMERA
+				var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+
+				var VIEW_ANGLE = 50, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 1, FAR = 10000;
+
+				camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+				camera.lookAt( scene.position );
+
+				scene.add(camera);
+				camera.position.set(0, 300, 0);
+				camera.target = new THREE.Vector3(0, 150, 0);
+
 				var controls = new THREE.OrbitControls(camera);
 
-				//light
+				// RENDERER
+				renderer = new THREE.WebGLRenderer( {antialias:true} );
+				renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+				document.body.appendChild( renderer.domElement );
+
+				//LIGHT
 				var light = new THREE.DirectionalLight( 0xefefff, 1.5 );
 				light.position.set( 1, 1, 1 ).normalize();
 				scene.add( light );
@@ -54,72 +61,31 @@
 				light.position.set( -1, -1, -1 ).normalize();
 				scene.add( light );
 
-				//horse
-				var loader = new THREE.JSONLoader();
-
-				loader.load("horse.js", function( geometry ) {
-					mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( {
-						vertexColors: THREE.FaceColors,
-						morphTargets: true
-					}));
-
-
-					mesh.scale.set( 1.5, 1.5, 1.5 );
-					mesh.rotation.y = Math.PI / 2;
-					scene.add(mesh);
-
-					//animation
-					mixer = new THREE.AnimationMixer( mesh );
-					var clip = THREE.AnimationClip.CreateFromMorphTargetSequence( 'gallop', geometry.morphTargets, 30 );
-					mixer.clipAction( clip ).setDuration( 1 ).play();
-				} );
-
-
-				renderer = new THREE.WebGLRenderer();
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				container.appendChild(renderer.domElement);
-
-
+				// STATS
 				stats = new Stats();
-				container.appendChild( stats.dom );
+				stats = new Stats();
+				document.body.appendChild( stats.dom );
+
+				// LIGHT
+				var light = new THREE.PointLight(0xffffff);
+				light.position.set(0, 250, 0);
+				scene.add(light);
+
+				// FLOOR
+				var floorTexture = new THREE.ImageUtils.loadTexture( 'checkerboard.jpg' );
+				floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+				floorTexture.repeat.set( 10, 10 );
+				var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } );
+				var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
+				var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+				floor.position.y = -0.5;
+				floor.rotation.x = Math.PI / 2;
+				scene.add(floor);
 
 				window.addEventListener( 'resize', onWindowResize, false );
+
+				createPanel();
 			}
-
-
-			function createGround() {
-				var textureLoader = new THREE.TextureLoader();
-				var texture1 = textureLoader.load( "crate.gif" );
-				var material1 = new THREE.MeshPhongMaterial( { color: 0xffffff, map: texture1 } );
-				texture1.wrapS = texture1.wrapT = THREE.RepeatWrapping;
-				texture1.repeat.set(512, 512);
-
-				var geometry = new THREE.PlaneBufferGeometry( 100, 100 );
-				var mesh1 = new THREE.Mesh(geometry, material1);
-				mesh1.rotation.x = - Math.PI / 2;
-				mesh1.scale.set(1000, 1000, 1000);
-				scene.add(mesh1);
-			}
-
-
-			/**
-			function onDocumentKeyDown(event) {
-	    	var keyCode = event.which;
-
-				if (keyCode == 87) {
-					mesh.position.z += 100;
-				}
-
-				else if (keyCode == 83) {
-					mesh.position.z -= 100;
-				}
-
-		 		render();
-			}
-			document.addEventListener("keydown", onDocumentKeyDown, false);
-			*/
-
 
 			function onWindowResize() {
 				camera.aspect = window.innerWidth / window.innerHeight;
@@ -134,7 +100,55 @@
 				stats.update();
 			}
 
+			function createPanel() {
+				var panel = new dat.GUI( { width: 310 } );
+				var folder1 = panel.addFolder( 'Add model' );
+				settings = {
+					'horse':            		addHorse,
+					'flamingo':         		addFlaming,
+					'parrot': 							addParrot,
+					'stork':								addStork
 
+				};
+				folder1.add( settings, 'horse' );
+				folder1.add( settings,  'flamingo' );
+				folder1.add( settings,  'parrot' );
+				folder1.add( settings,  'stork' );
+				folder1.open();
+			}
+
+			var selected_object ;
+
+			//mouse event variables
+			var projector = new THREE.Projector();
+			mouse_vector = new THREE.Vector3();
+			mouse = { x: 0, y: 0, z: 1 };
+			ray = new THREE.Raycaster(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 0));
+			intersects = [];
+
+			// Para perspectiveCamera
+			function onMouseDown(e) {
+				//Evita que o evento chame outra função
+				e.preventDefault();
+				//Começa a tranformação entre coordenadas do rato e three.js
+				mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+				mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
+				//Vector 3D que indica a direção do vetor a partir do pixel
+				mouse_vector.set(mouse.x, mouse.y, mouse.z);
+				//Define um ponto no espaço 3D de acordocom o clique do rato
+				projector.unprojectVector(mouse_vector, camera);
+				var direction = mouse_vector.sub(camera.position).normalize();
+				//Chama o raycaster com a posição da câmara e a direção
+				ray.set(camera.position, direction);
+				//Verifica se o raio intersetou algum objeto na cena
+				intersects = ray.intersectObjects(scene.children);
+
+ 				selected_object = intersects[0].object;
+
+				selected_object.material.color.setHex(0xFF00FF);
+			}
+
+			  renderer.domElement.addEventListener('mousedown', onMouseDown);
 			var radius = 600;
 			var theta = 0;
 			var prevTime = Date.now();
@@ -143,16 +157,20 @@
 				theta += 0.1;
 				//camera.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
 				//camera.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
-				camera.lookAt( camera.target );
+				camera.lookAt(camera.target);
 
-				if ( mixer ) {
+
+				if(mixers.length > 0){
 					var time = Date.now();
-					mixer.update( ( time - prevTime ) * 0.001 );
+					for( var i = 0; i < mixers.length; i++ ){
+						mixers[i].update( ( time - prevTime ) * 0.001 );
+					}
 					prevTime = time;
 				}
 
 				renderer.render( scene, camera );
 			}
+
 		</script>
 
 	</body>
