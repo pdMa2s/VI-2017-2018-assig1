@@ -20,6 +20,10 @@
 		<script src="three.js-master/examples/js/controls/OrbitControls.js"></script>
 		<script src="three.js-master/examples/js/libs/dat.gui.min.js"></script>
 		<script src="modelLoader.js"></script>
+		<script src="three.js-master/examples/js/exporters/OBJExporter.js"></script>
+		<script src="three.js-master/examples/js/loaders/OBJLoader.js"></script>
+		<script src="three.js-master/examples/js/loaders/BinaryLoader.js"></script>
+
 		<script>
 			var stats;
 			var camera, scene, projector, renderer;
@@ -72,7 +76,7 @@
 				scene.add(light);
 
 				// FLOOR
-				var floorTexture = new THREE.ImageUtils.loadTexture( 'grassTexture.jpg' );
+				var floorTexture = new THREE.ImageUtils.loadTexture( 'textures/grassTexture.jpg' );
 				floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
 				floorTexture.repeat.set( 10, 10 );
 				var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } );
@@ -83,7 +87,6 @@
 				scene.add(floor);
 
 				window.addEventListener( 'resize', onWindowResize, false );
-
 				createPanel();
 			}
 
@@ -107,13 +110,25 @@
 					'horse':            		addHorse,
 					'flamingo':         		addFlaming,
 					'parrot': 							addParrot,
-					'stork':								addStork
+					'stork':								addStork,
+					'box':									addBox,
+					'earth':								addEarth,
+					'veyron':								addVeyron,
+					'camaro':								addCamaro,
+					'gallardo':							addGallardo,
+					'f50':									addF50
 
 				};
 				folder1.add( settings, 'horse' );
 				folder1.add( settings,  'flamingo' );
 				folder1.add( settings,  'parrot' );
 				folder1.add( settings,  'stork' );
+				folder1.add( settings,  'box' );
+				folder1.add( settings,  'earth' );
+				folder1.add( settings,  'veyron' );
+				folder1.add( settings,  'camaro' );
+				folder1.add( settings,  'gallardo' );
+				folder1.add( settings,  'f50' );
 				folder1.open();
 			}
 
