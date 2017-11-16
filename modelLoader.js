@@ -408,7 +408,7 @@ var CARS = {
       				geometry.sortFacesByMaterialIndex();
 
       				var m = [],
-      					s = CARS[ car ].scale * 0.5,
+      					s = CARS[ car ].scale * 0.3,
       					r = CARS[ car ].init_rotation,
       					materials = CARS[ car ].materials,
       					mi = CARS[ car ].init_material,
