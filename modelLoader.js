@@ -437,28 +437,11 @@ var CARS = {
 
       				CARS[ car ].object = mesh;
 
-      				CARS[ car ].buttons = createButtons( materials.body, car );
-      				attachButtonMaterials( materials.body, m, bm, car );
+      				//CARS[ car ].buttons = createButtons( materials.body, car );
+      				//attachButtonMaterials( materials.body, m, bm, car );
 
       				//switchCar( car );
 
       			}
 
-            function attachButtonMaterials( materials, faceMaterials, material_indices, car ) {
-
-            				for( var i = 0; i < materials.length; i ++ ) {
-
-            					$( button_name( car, i ) ).counter = i;
-            					$( button_name( car, i ) ).addEventListener( 'click', function() {
-
-            						for ( var j = 0; j < material_indices.length; j ++ ) {
-
-            							faceMaterials[ material_indices [ j ] ] = materials[ this.counter ][ 1 ];
-
-            						}
-
-            					}, false );
-
-            				}
-
-            			}
+            

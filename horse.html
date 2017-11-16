@@ -26,6 +26,8 @@
 	<script src="three.js-master/examples/js/exporters/OBJExporter.js"></script>
 	<script src="three.js-master/examples/js/loaders/OBJLoader.js"></script>
 	<script src="three.js-master/examples/js/loaders/BinaryLoader.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
 	<script>
 	var stats, camera, scene, projector, renderer, controls;
 	var mesh, selected_object, settings;
@@ -88,7 +90,6 @@
 
 		// STATS
 		stats = new Stats();
-		stats = new Stats();
 		container.appendChild(stats.dom);
 
 		// FLOOR
@@ -129,6 +130,8 @@
 	function createPanel() {
 		var panel = new dat.GUI({ width: 270 });
 		var folder1 = panel.addFolder('Add model');
+		var folder2 = panel.addFolder('Animation');
+		
 		settings = {
 			'horse':            		addHorse,
 			'flamingo':         		addFlaming,
@@ -161,7 +164,6 @@
 		folder1.add( settings,  'f50' );
 		folder1.open();
 
-		var folder2 = panel.addFolder('Animation');
 		folder2.add(settings, 'start/pause');
 		var step = 0.1;
 		folder2.add(settings, 'rotation_x').min(-10).max(10).step(step).name('Rotation X axis').onChange(render);
