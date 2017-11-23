@@ -1,6 +1,7 @@
 var mixers = [];
 var objects = [];
 var count = 0;
+
 var scale  = 0.5;
 function addJsonModel(model) {
     var loader = new THREE.JSONLoader();
