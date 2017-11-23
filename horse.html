@@ -20,18 +20,16 @@
 <script src="three.js-master/examples/js/libs/stats.min.js"></script>
 <script src="three.js-master/examples/js/controls/DragControls.js"></script>
 <script src="three.js-master/examples/js/controls/OrbitControls.js"></script>
-
 <script src="three.js-master/examples/js/libs/dat.gui.min.js"></script>
-<script src="modelLoader.js"></script>
 <script src="three.js-master/examples/js/exporters/OBJExporter.js"></script>
 <script src="three.js-master/examples/js/loaders/OBJLoader.js"></script>
 <script src="three.js-master/examples/js/loaders/BinaryLoader.js"></script>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+<script src="modelLoader.js"></script>
 
 <script>
     var stats, camera, scene, projector, renderer, controls;
     var mesh, selected_object, settings;
-    var animations = {[]};
 
     // Boolean for start and restart
     var theta = 0;
@@ -144,15 +142,17 @@
             'camaro': addCamaro,
             'gallardo': addGallardo,
             'f50': addF50,
+            'import model': "",
             'wireframe': false,
             'start/pause': StartAnimation,
             'geometry': 'Cube',
             'rotation_x': 1,
             'rotation_y': 1,
             'rotation_z': 1,
-            'name': selected_object.name
+            'name': selected_object.name,
+            'scale' : 0.5
         }
-
+        var step = 0.1;
         folder1.add(settings, 'horse');
         folder1.add(settings, 'flamingo');
         folder1.add(settings, 'parrot');
@@ -163,14 +163,17 @@
         folder1.add(settings, 'camaro');
         folder1.add(settings, 'gallardo');
         folder1.add(settings, 'f50');
+
+        folder1.add(settings, 'scale').min(0.01).max(15).step(0.01).name('scale').onChange(function (value) { setScale(value)});
+        //folder1.add( settings,  'import model').onChange(function(value){addUserModel(value)});
         folder1.open();
 
         folder2.add(settings, 'start/pause');
-        var step = 0.1;
+
         folder2.add(settings, 'rotation_x').min(-10).max(10).step(step).name('Rotation X axis').onChange(render);
         folder2.add(settings, 'rotation_y').min(-10).max(10).step(step).name('Rotation Y axis').onChange(render);
         folder2.add(settings, 'rotation_z').min(-10).max(10).step(step).name('Rotation Z axis').onChange(render);
-        folder2.open();
+        //folder2.open();
 
         var folder3 = panel.addFolder('Selected object settings');
         folder3.add(settings, 'name').listen();
@@ -251,8 +254,6 @@
                 objects.push(sphere)
 
         }
-
-
     }
 
     renderer.domElement.addEventListener('mousedown', onMouseDown);
