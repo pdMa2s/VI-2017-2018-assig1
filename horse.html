@@ -28,6 +28,7 @@
 <script src="modelLoader.js"></script>
 <script src="SceneObject.js"></script>
 <script src="createObjectAnimation.js"></script>
+<script src="Animator.js"></script>
 
 <script>
     var stats, camera, scene, projector, renderer, controls;
@@ -185,11 +186,14 @@
             'start/pause': StartAnimation,
             'create trajectory': createTrajectory,
             'geometry': 'Cube',
-            'rotation_x': 1,
-            'rotation_y': 1,
-            'rotation_z': 1,
+            'rotation_x': 0,
+            'rotation_y': 0,
+            'rotation_z': 0,
             'name': selected_object.name,
-            'scale': 0.5
+            'scale': 0.5,
+            'startTime': 0,
+            'endTime': 0,
+            'add Rotation': createRotation
         };
         var step = 0.1;
         folder1.add(settings, 'horse');
@@ -210,11 +214,13 @@
         folder1.open();
 
         folder2.add(settings, 'start/pause');
+        folder2.add(settings, 'startTime').name('Start time').onChange(function (value) {start = value;});
+        folder2.add(settings, 'endTime').name('End time').onChange(function (value) {end = value;});
         folder2.add(settings, 'create trajectory');
-
-        folder2.add(settings, 'rotation_x').min(-10).max(10).step(step).name('Rotation X axis').onChange(render);
-        folder2.add(settings, 'rotation_y').min(-10).max(10).step(step).name('Rotation Y axis').onChange(render);
-        folder2.add(settings, 'rotation_z').min(-10).max(10).step(step).name('Rotation Z axis').onChange(render);
+        folder2.add(settings, 'rotation_x').min(-10).max(10).step(step).name('Rotation X axis').onChange(function (value) {rX = value;});
+        folder2.add(settings, 'rotation_y').min(-10).max(10).step(step).name('Rotation Y axis').onChange(function (value) {rY = value;});
+        folder2.add(settings, 'rotation_z').min(-10).max(10).step(step).name('Rotation Z axis').onChange(function (value) {rZ = value;});
+        folder2.add(settings, 'add Rotation');
         //folder2.open();
 
         var folder3 = panel.addFolder('Selected object settings');
@@ -223,14 +229,14 @@
             selected_object.material.wireframe = value;
         });
 
-        folder3.open();
+        //folder3.open();
 
         var folder4 = panel.addFolder('Create object');
 
         //meter cores e assim?? ou não permitimos criar objeos pela gui MATOS?
 
         folder4.add(settings, 'geometry', ['Cube', 'Sphere', 'Torus']).onChange(render);
-        folder4.open();
+        //folder4.open();
     }
 
     function StartAnimation() {
