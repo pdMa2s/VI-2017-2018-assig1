@@ -3,6 +3,13 @@ var objects = [];
 var count = 0;
 var scale  = 0.5;
 var objCollection = new ObjectCollection();
+
+function addObj(name, scale, url, texture, pos) {
+    var obj = new SceneObject(name, scale, pos);
+    obj.setUrl(url);
+    obj.setTexture(texture);
+    objCollection.addSceneObject(obj);
+}
 function addJsonModel(model) {
     var name;
     var url = "three.js-master/examples/models/animated/";
@@ -22,9 +29,7 @@ function addJsonModel(model) {
         var clip = THREE.AnimationClip.CreateFromMorphTargetSequence('move', geometry.morphTargets, 30);
         mixers[mixers.length - 1].clipAction(clip).setDuration(1).play();
         count++;
-        var obj = new SceneObject(name, scale);
-        obj.setUrl(url);
-        objCollection.addSceneObject(obj);
+        addObj(name, scale, url, "", mesh.position);
     });
 
 }
@@ -111,9 +116,7 @@ function addBox() {
     box.name = name;
     objects.push(box);
     count++;
-    var obj = new SceneObject(name, scale);
-    obj.setTexture(tex);
-    objCollection.addSceneObject(obj);
+    addObj(name, scale, "", tex, box.position);
     scene.add(box);
 }
 
@@ -126,11 +129,9 @@ function addEarth() {
     earth.position.y = 100;
     var name = "earth_" + count;
     earth.name = name;
-    var obj = new SceneObject(name, scale);
-    obj.setTexture(texUrl);
-    objCollection.addSceneObject(obj);
     objects.push(earth);
     count++;
+    addObj(name, scale, "", texUrl, earth.position);
     scene.add(earth);
 }
 
@@ -178,9 +179,7 @@ function createCar(geometry, url,car) {
     mesh.name = name;
     objects.push(mesh);
     count++;
-    var obj = new SceneObject(name, scale);
-    obj.setUrl(url)
-    objCollection.addSceneObject(obj);
+    addObj(name, scale, url, "", mesh.position);
     scene.add(mesh);
 
     CARS[car].object = mesh;

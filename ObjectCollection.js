@@ -1,6 +1,6 @@
 class ObjectCollection {
   constructor() {
-    var objs = [];
+    this.objs = [];
     this.json = {"sceneObjects": []};
   }
 
@@ -9,22 +9,31 @@ class ObjectCollection {
   }
 
   addSceneObject(obj){
-    objs.push(obj);
+    this.objs.push(obj);
   }
 
   getObject(name){
-      for(var i = 0; i < objs.length(); i++){
-          if( objs[i].getName() === name){
-              return objs[i];
+      for(var i = 0; i < this.objs.length; i++){
+          if( this.objs[i].getName() === name){
+              return this.objs[i];
           }
       }
       return null;
   }
 
+  setPosition(name, pos){
+      for(var i = 0; i < this.objs.length; i++){
+          if( this.objs[i].getName() === name){
+              this.objs[i].setPosition(pos);
+              return true;
+          }
+      }
+      return false;
+  }
   addAnimation(objName, animation){
-      for(var i = 0; i < objs.length(); i++){
-          if( objs[i].getName() === name){
-              objs[i].addAnimation(animation);
+      for(var i = 0; i < this.objs.length; i++){
+          if( this.objs[i].getName() === name){
+              this.objs[i].addAnimation(animation);
               return true;
           }
       }

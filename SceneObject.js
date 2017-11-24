@@ -1,10 +1,12 @@
 class SceneObject {
-  constructor(name, scale) {
+  constructor(name, scale,position) {
     this.name = name;
+    this.position = position;
     this.url = "";
     this.scale = scale;
     this.texture  = "";
-    this.json = {"name": this.name, "url": this.url, "scale": this.scale, "texture": this.texture,"animations": [] };
+    this.json = {"name": this.name, "url": this.url, "scale": this.scale, "texture": this.texture,
+        "position":{"x": position.x, "y": position.y, "z": position.z} ,"animations": [] };
   }
 
   getJson(){
@@ -14,6 +16,11 @@ class SceneObject {
     this.texture = texture;
     this.json.texture = texture;
   }
+  setPosition(pos) {
+      this.position = pos;
+      this.json.position = {"x": pos.x, "y": pos.y, "z": pos.z};
+  }
+
 
   getName(){
     return this.name;
