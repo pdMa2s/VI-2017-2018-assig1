@@ -30,7 +30,7 @@ function addJsonModel(model) {
 }
 function setScale(newScale) {
     scale = newScale;
-    
+
 }
 
 /*function addObjModel(model, material = null){

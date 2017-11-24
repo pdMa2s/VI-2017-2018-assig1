@@ -27,10 +27,14 @@
 <script src="ObjectCollection.js"></script>
 <script src="modelLoader.js"></script>
 <script src="SceneObject.js"></script>
+<script src="createObjectAnimation.js"></script>
 
 <script>
     var stats, camera, scene, projector, renderer, controls;
     var mesh, selected_object, settings;
+    var vectors = [];
+    var sphereMaterial = new THREE.MeshBasicMaterial({color: 0xff0000});
+
 
     // Boolean for start and restart
     var theta = 0;
@@ -67,13 +71,47 @@
         var dragControls = new THREE.DragControls(objects, camera, renderer.domElement);
         dragControls.addEventListener('dragstart', function (event) {
             controls.enabled = false;
-            console.log(event.object.position);
         });
 
         dragControls.addEventListener('dragend', function (event) {
-            controls.enabled = true;
-            console.log(event.object.position);
-        });
+                controls.enabled = true;
+                if (event.object.material ===  sphereMaterial) {
+                    var array = object_trajectories[selected_object.name];
+                    var sphereGroup = array[array.length - 1]["sphereGroup"];
+                    var vectors = [];
+                    for (var i = 0; i < sphereGroup.children.length; i++) {
+                        var point1 = sphereGroup.children[i].position;
+                        vectors.push(point1);
+                    }
+
+                    if (vectors.length > 1) {
+
+                        var line = array[array.length - 1]["line"];
+
+                        var curve = new THREE.CatmullRomCurve3(vectors);
+                        var points = curve.getPoints(numPoints);
+                        var geometry = new THREE.Geometry();
+                        for (var i = 0; i < points.length; i++) {
+                            geometry.vertices.push(points[i]);
+                        }
+                        var curveObject = new THREE.Line(geometry, lineMaterial);
+
+                        if (line === null) {
+                            scene.add(curveObject);
+                            array[array.length - 1]["line"] = curveObject;
+                        }
+
+                        else {
+                            array[array.length - 1]["line"] = curveObject;
+                            animate();
+                        }
+                    }
+                }
+
+
+                //console.log(event.object.position);
+            }
+        );
 
         //LIGHTS
         var light = new THREE.DirectionalLight(0xefefff, 1.5);
@@ -126,7 +164,6 @@
 
     window.addEventListener('resize', onWindowResize, false);
 
-
     function createPanel() {
         var panel = new dat.GUI({width: 270});
         var folder1 = panel.addFolder('Add model');
@@ -146,13 +183,14 @@
             'import model': "",
             'wireframe': false,
             'start/pause': StartAnimation,
+            'create trajectory': createTrajectory,
             'geometry': 'Cube',
             'rotation_x': 1,
             'rotation_y': 1,
             'rotation_z': 1,
             'name': selected_object.name,
-            'scale' : 0.5
-        }
+            'scale': 0.5
+        };
         var step = 0.1;
         folder1.add(settings, 'horse');
         folder1.add(settings, 'flamingo');
@@ -165,11 +203,14 @@
         folder1.add(settings, 'gallardo');
         folder1.add(settings, 'f50');
 
-        folder1.add(settings, 'scale').min(0.01).max(15).step(0.01).name('scale').onChange(function (value) { setScale(value)});
+        folder1.add(settings, 'scale').min(0.01).max(15).step(0.01).name('scale').onChange(function (value) {
+            setScale(value)
+        });
         //folder1.add( settings,  'import model').onChange(function(value){addUserModel(value)});
         folder1.open();
 
         folder2.add(settings, 'start/pause');
+        folder2.add(settings, 'create trajectory');
 
         folder2.add(settings, 'rotation_x').min(-10).max(10).step(step).name('Rotation X axis').onChange(render);
         folder2.add(settings, 'rotation_y').min(-10).max(10).step(step).name('Rotation Y axis').onChange(render);
@@ -240,22 +281,55 @@
 
                 //Verifica se o raio intersetou algum objeto na cena
                 intersects = ray.intersectObjects(scene.children);
-                selected_object = intersects[0].object;
-                //alert(selected_object.name);
-                settings.name = selected_object.name;
+                if (intersects[0].object.material !==  sphereMaterial) {
+                    selected_object = intersects[0].object;
+                    //alert(selected_object.name);
+                    settings.name = selected_object.name;
+                }
                 break;
 
             case 2: // botão direito
                 e.preventDefault();
                 var geometry = new THREE.SphereGeometry(10, 32, 32);
-                var material = new THREE.MeshBasicMaterial({color: 0xff0000});
-                var sphere = new THREE.Mesh(geometry, material);
+                var sphere = new THREE.Mesh(geometry, sphereMaterial);
                 sphere.position.set(0, 200, 0);
-                scene.add(sphere);
-                objects.push(sphere)
 
+                if (object_trajectories[selected_object.name] === undefined) {
+                    var group = new THREE.Group();
+                    group.add(sphere);
+                    object_trajectories[selected_object.name] = [{sphereGroup: group, line: null}];
+                }
+
+                else {
+                    var array = object_trajectories[selected_object.name];
+                    var group = array[array.length - 1]["sphereGroup"];
+                    group.add(sphere);
+                    array[array.length - 1]["sphereGroup"] = group;
+                    alert(array[array.length - 1]["sphereGroup"].children.length);
+                }
+
+                console.log(object_trajectories);
+                scene.add(sphere);
+                objects.push(sphere);
+                break;
         }
     }
+
+    /*
+
+    "cars": {
+        [
+        "obj1": {
+            "traj2": {"shpere":4, "line":"automatic"},
+            "traj1": {"doors":4, "transmission":"automatic"}
+        },
+        "Ford": {
+            "Taurus": {"doors":4, "transmission":"automatic"},
+            "Escort": {"doors":4, "transmission":"automatic"}
+        }
+        ]
+
+    */
 
     renderer.domElement.addEventListener('mousedown', onMouseDown);
 
