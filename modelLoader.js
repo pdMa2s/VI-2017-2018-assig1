@@ -1,27 +1,36 @@
 var mixers = [];
 var objects = [];
 var count = 0;
-
 var scale  = 0.5;
+var objCollection = new ObjectCollection();
 function addJsonModel(model) {
+    var name;
+    var url = "three.js-master/examples/models/animated/";
     var loader = new THREE.JSONLoader();
-    loader.load("three.js-master/examples/models/animated/" + model + ".js", function (geometry) {
+    loader.load(url + model + ".js", function (geometry) {
         mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
             vertexColors: THREE.FaceColors,
             morphTargets: true,
         }));
+        url += model + ".js";
         mesh.scale.set(scale, scale, scale);
-        mesh.name = model + '_' + count;
+        name = model + '_' + count;
+        mesh.name = name;
         objects.push(mesh);
         scene.add(mesh);
         mixers.push(new THREE.AnimationMixer(mesh));
         var clip = THREE.AnimationClip.CreateFromMorphTargetSequence('move', geometry.morphTargets, 30);
         mixers[mixers.length - 1].clipAction(clip).setDuration(1).play();
         count++;
+        var obj = new SceneObject(name, scale);
+        obj.setUrl(url);
+        objCollection.addSceneObject(obj);
     });
+
 }
 function setScale(newScale) {
     scale = newScale;
+    
 }
 
 /*function addObjModel(model, material = null){
@@ -75,7 +84,8 @@ function addF50() {
 function addCar(carModel) {
     var loader = new THREE.BinaryLoader();
     loader.load(CARS[carModel].url, function (geometry) {
-        createCar(geometry, carModel)
+
+        createCar(geometry,CARS[carModel].url ,carModel);
     });
 }
 
@@ -92,23 +102,33 @@ function applyTexture(textureFile) {
 
 function addBox() {
     var side = 10 * scale +4;
+    var tex = "textures/crateTexture.jpg";
     var geometry = new THREE.BoxGeometry(side, side, side);
-    var boxTexture = applyTexture("textures/crateTexture.jpg");
+    var boxTexture = applyTexture(tex);
     var box = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(boxTexture));
     box.position.y = 15;
-    box.name = "box_" + count;
+    var name = "box_" + count;
+    box.name = name;
     objects.push(box);
     count++;
+    var obj = new SceneObject(name, scale);
+    obj.setTexture(tex);
+    objCollection.addSceneObject(obj);
     scene.add(box);
 }
 
 function addEarth() {
     var ray = 200 * scale;
     var geometry = new THREE.SphereGeometry(ray, 32, 32);
-    var texture = applyTexture("textures/earth.jpg");
+    var texUrl = "textures/earth.jpg";
+    var texture = applyTexture(texUrl);
     var earth = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(texture));
     earth.position.y = 100;
-    earth.name = "earth_" + count;
+    var name = "earth_" + count;
+    earth.name = name;
+    var obj = new SceneObject(name, scale);
+    obj.setTexture(texUrl);
+    objCollection.addSceneObject(obj);
     objects.push(earth);
     count++;
     scene.add(earth);
@@ -130,7 +150,7 @@ function addStork() {
     addJsonModel("stork");
 }
 
-function createCar(geometry, car) {
+function createCar(geometry, url,car) {
 
     geometry.sortFacesByMaterialIndex();
 
@@ -154,9 +174,13 @@ function createCar(geometry, car) {
     mesh.rotation.z = r[ 2 ];*/
 
     mesh.scale.x = mesh.scale.y = mesh.scale.z = s;
-    mesh.name = car+ "_" + count;
+    var name = car+ "_" + count;
+    mesh.name = name;
     objects.push(mesh);
     count++;
+    var obj = new SceneObject(name, scale);
+    obj.setUrl(url)
+    objCollection.addSceneObject(obj);
     scene.add(mesh);
 
     CARS[car].object = mesh;
