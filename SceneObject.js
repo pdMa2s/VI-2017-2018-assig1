@@ -5,6 +5,7 @@ class SceneObject {
     this.url = "";
     this.scale = scale;
     this.texture  = "";
+    this.animations = [];
     this.json = {"name": this.name, "url": this.url, "scale": this.scale, "texture": this.texture,
         "position":{"x": position.x, "y": position.y, "z": position.z} ,"animations": [] };
   }
@@ -31,6 +32,6 @@ class SceneObject {
   }
 
   addAnimation(animation){
-    this.json.animations.push({animation});
+    this.animations.push(animation);
   }
 }
