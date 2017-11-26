@@ -330,22 +330,6 @@
         }
     }
 
-    /*
-
-    "cars": {
-        [
-        "obj1": {
-            "traj2": {"shpere":4, "line":"automatic"},
-            "traj1": {"doors":4, "transmission":"automatic"}
-        },
-        "Ford": {
-            "Taurus": {"doors":4, "transmission":"automatic"},
-            "Escort": {"doors":4, "transmission":"automatic"}
-        }
-        ]
-
-    */
-
     renderer.domElement.addEventListener('mousedown', onMouseDown);
 
     function animate() {
@@ -375,11 +359,12 @@
             playAnimations();
         }
 
-
+        /*
         if (t === 0) {
             console.log("OBJECT INITIAL POS");
             console.log(object.position);
         }
+
 
         // teste só para 1 trajetoria
         if (t < 1) {
@@ -410,6 +395,7 @@
             // 60fps -> 60 incrementos - 1 segundo
             // 3 segundos - 180 incrementos  t = [0,1]  1 / 180 = 0.005555555555555556
         }
+        */
     renderer.render(scene, camera);
     //controls.update();
     }
