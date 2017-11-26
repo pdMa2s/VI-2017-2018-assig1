@@ -1,4 +1,3 @@
-
 var animationStart = 0;
 var animationEnd = 0;
 var timeLineMax = 0;
@@ -11,27 +10,25 @@ var rotatedY = 0;
 var rotatedZ = 0;
 
 function createRotation() {
-
-    if(animationEnd > timeLineMax){
+    if (animationEnd > timeLineMax) {
         timeLineMax = animationEnd;
     }
     var animation = new Animation(animationStart, animationEnd);
-    animation.rotation(rX,rY,rZ);
+    animation.rotation(rX, rY, rZ);
     objCollection.addAnimation(selected_object.name, animation);
-
 }
 
-function rotateObject(obj, prevTime,animationTime) {
+function rotateObject(obj, prevTime, animationTime) {
     var date = new Date();
     var now = date.getTime();
-    var fps = animationTime*50;
-    var animationMillis = animationTime *1000;
-    if( (now - prevTime) <= animationMillis || rotated((rX/fps),(rY/fps),(rZ/fps)) ){
-        obj.rotation.x += (rX/fps);
-        obj.rotation.y += (rY/fps);
-        obj.rotation.z += (rZ/fps);
+    var fps = animationTime * 50;
+    var animationMillis = animationTime * 1000;
+    if ((now - prevTime) <= animationMillis || rotated((rX / fps), (rY / fps), (rZ / fps))) {
+        obj.rotation.x += (rX / fps);
+        obj.rotation.y += (rY / fps);
+        obj.rotation.z += (rZ / fps);
     }
-    else{
+    else {
         rotatedX = 0;
         rotatedY = 0;
         rotatedZ = 0;
@@ -39,21 +36,122 @@ function rotateObject(obj, prevTime,animationTime) {
 
 }
 
-function rotated(rXFps,rYFps,rZFps) {
+function rotated(rXFps, rYFps, rZFps) {
     rotatedX += rXFps;
     rotatedY += rYFps;
     rotatedZ += rZFps;
 
-    return (rotatedX <= rX*0.85) && (rotatedY <= rY*0.85) && (rotatedZ <= rZ*0.85);
+    return (rotatedX <= rX * 0.85) && (rotatedY <= rY * 0.85) && (rotatedZ <= rZ * 0.85);
 }
 
-function updateGui(gui) {
-    for (var i = 0; i < Object.keys(gui.__folders).length; i++) {
-    var key = Object.keys(gui.__folders)[i];
-    for (var j = 0; j < gui.__folders[key].__controllers.length; j++ )
-    {
-        gui.__folders[key].__controllers[j].updateDisplay();
+
+var numPoints = 100; // line trajectory points
+var creatingTrajectory = false;
+var fps = 60;
+var trajectoryColors = [];
+trajectoryColors.push(new THREE.Color(0xe6194b));
+trajectoryColors.push(new THREE.Color(0x3cb44b));
+trajectoryColors.push(new THREE.Color(0xffe119));
+trajectoryColors.push(new THREE.Color(0x0082c8));
+trajectoryColors.push(new THREE.Color(0xf58231));
+
+
+var trajPositions = [];
+
+function createTrajectory() {
+    if (creatingTrajectory === true) {
+        if (trajPositions.length <= 1) {
+            alert("Must define at least one trajectory point");
+        }
+        else {
+            var line = generateTrajectoryLine();
+
+            var animation = new Animation(start, end);
+            animation.trajectory(trajPositions, line);
+            objCollection.addAnimation(selected_object.name, animation);
+            alert(objCollection.getObject(selected_object.name).getNumberOfTrajectories());
+
+
+            //meter pos em vez de esferas
+            //generateTrajectoryLine(selected_object);
+            //chamar a cena animation.cenas e passar pos
+            // tirar elemento do objects esferas tbm para nao ser possivel mudar a pos
+            // ver se traje pos > 1
+            creatingTrajectory = false;
+        }
+    }
+
+    else {
+        trajPositions = [];
+
+        if (objCollection.getObject(selected_object.name).hasTrajectoryAnimation() === false) {
+            trajPositions.push(selected_object.position);
+        }
+        creatingTrajectory = true;
     }
 }
 
+
+function generateTrajectoryLine() {
+    var obj = objCollection.getObject(selected_object.name);
+    var points = [];
+
+    if (obj.hasTrajectoryAnimation()) {
+        alert("TEM MAIS QUE 1 TRAJ");
+
+        for (var i = obj.animations.length - 1; i >= 0; i--) {
+            var anim = obj.animations[i];
+            if (anim.type === "trajectory") {
+                var anteriorPositionsSize = anim.json.animation.trajectory.pos.length - 1;
+                points.push(anim.json.animation.trajectory.pos[anteriorPositionsSize]);
+                break;
+            }
+        }
+    }
+
+    for (var j = 0; j < trajPositions.length; j++) {
+        if ((trajPositions[j] instanceof THREE.Vector3) === false) {
+            var pos = trajPositions[j].position;
+            points.push(pos);
+            objects.splice(objects.indexOf(trajPositions[j]), 1);
+            trajPositions[j] = pos;
+        }
+
+        else {
+            points.push(trajPositions[j]);
+            objects.splice(objects.indexOf(selected_object), 1);
+        }
+    }
+
+    console.log("POINTS");
+    console.log(points);
+
+
+    var spline = new THREE.CatmullRomCurve3(points);
+
+    var geometry = new THREE.Geometry();
+    var splinePoints = spline.getPoints(numPoints);
+
+    for (var i = 0; i < splinePoints.length; i++) {
+        geometry.vertices.push(splinePoints[i]);
+    }
+    var lineMaterial = new THREE.LineBasicMaterial({linewidth: 2});
+
+    var line = new THREE.Line(geometry, lineMaterial);
+    line.material.color = new THREE.Color(0xe6194b);
+
+    /*
+    var nTraj = obj.getNumberOfTrajectories();
+    if (nTraj <= trajectoryColors.length) {
+        line.material.color = trajectoryColors[nTraj - 1];
+    }
+
+    else {
+        line.material.color = trajectoryColors[(nTraj - 1) % (trajectoryColors.length)];
+    }
+*/
+    scene.add(line);
+    return line;
 }
+
+
