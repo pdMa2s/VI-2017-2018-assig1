@@ -3,6 +3,7 @@ class Animation {
     this.start = start;
     this.end = end;
     this.json = {"animation": {}};
+    this.type = "";
   }
 
   rotation(x , y , z){
@@ -19,5 +20,9 @@ class Animation {
       this.json.animation = {"translation": jsonPos};
   }
 
+  trajectory(positions, line) {
+      this.type = "trajectory";
+      this.json.animation = {"trajectory": {"pos": positions, "line": line}};
+  }
 
 }

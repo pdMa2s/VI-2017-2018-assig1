@@ -30,6 +30,7 @@ class ObjectCollection {
       }
       return false;
   }
+
   addAnimation(objName, animation){
       for(var i = 0; i < this.objs.length; i++){
           if( this.objs[i].getName() === name){

@@ -35,6 +35,8 @@
     var mesh, selected_object, settings;
     var vectors = [];
     var sphereMaterial = new THREE.MeshBasicMaterial({color: 0xff0000});
+    var clock = new THREE.Clock();
+    var secondsPassed;
 
 
     // Boolean for start and restart
@@ -76,41 +78,42 @@
 
         dragControls.addEventListener('dragend', function (event) {
                 controls.enabled = true;
-                if (event.object.material ===  sphereMaterial) {
-                    var array = object_trajectories[selected_object.name];
-                    var sphereGroup = array[array.length - 1]["sphereGroup"];
-                    var vectors = [];
-                    for (var i = 0; i < sphereGroup.children.length; i++) {
-                        var point1 = sphereGroup.children[i].position;
-                        vectors.push(point1);
-                    }
+                /*
+               if (event.object.material ===  sphereMaterial) {
+                   var array = object_trajectories[selected_object.name];
+                   var spheres = array[array.length - 1]["spheres"];
+                   var vectors = [];
+                   for (var i = 0; i < spheres.children.length; i++) {
+                       var point1 = spheres.children[i].position;
+                       vectors.push(point1);
+                   }
 
-                    if (vectors.length > 1) {
+                   if (vectors.length > 1) {
 
-                        var line = array[array.length - 1]["line"];
+                       var line = array[array.length - 1]["line"];
 
-                        var curve = new THREE.CatmullRomCurve3(vectors);
-                        var points = curve.getPoints(numPoints);
-                        var geometry = new THREE.Geometry();
-                        for (var i = 0; i < points.length; i++) {
-                            geometry.vertices.push(points[i]);
-                        }
-                        var curveObject = new THREE.Line(geometry, lineMaterial);
+                       var curve = new THREE.CatmullRomCurve3(vectors);
+                       var points = curve.getPoints(numPoints);
+                       var geometry = new THREE.Geometry();
+                       for (var i = 0; i < points.length; i++) {
+                           geometry.vertices.push(points[i]);
+                       }
+                       var curveObject = new THREE.Line(geometry, lineMaterial);
 
-                        if (line === null) {
-                            scene.add(curveObject);
-                            array[array.length - 1]["line"] = curveObject;
-                        }
+                       if (line === null) {
+                           scene.add(curveObject);
+                           array[array.length - 1]["line"] = curveObject;
+                       }
 
-                        else {
-                            array[array.length - 1]["line"] = curveObject;
-                            animate();
-                        }
-                    }
-                }
+                       else {
+                           array[array.length - 1]["line"] = curveObject;
+                           animate();
+                       }
+                   }
+               }
+               */
 
-                objCollection.setPosition(selected_object.name,selected_object.position );
-                //console.log(event.object.position);
+                objCollection.setPosition(selected_object.name, selected_object.position);
             }
         );
 
@@ -126,10 +129,13 @@
         light = new THREE.PointLight(0xffffff);
         light.position.set(0, 250, 0);
         scene.add(light);
+        selected_object = light;
 
         // STATS
         stats = new Stats();
         container.appendChild(stats.dom);
+
+        /*
 
         // FLOOR
         var floorGeometry = new THREE.PlaneGeometry(9000, 9000, 100, 100);
@@ -153,6 +159,7 @@
         floor.name = 'floor';
         selected_object = floor;
         scene.add(floor);
+        */
 
         createPanel();
     }
@@ -184,7 +191,7 @@
             'import model': "",
             'wireframe': false,
             'start/pause': StartAnimation,
-            'create trajectory': createTrajectory,
+            'create/save trajectory': createTrajectory,
             'geometry': 'Cube',
             'rotation_x': 0,
             'rotation_y': 0,
@@ -214,12 +221,22 @@
         folder1.open();
 
         folder2.add(settings, 'start/pause');
-        folder2.add(settings, 'startTime').name('Start time').onChange(function (value) {start = value;});
-        folder2.add(settings, 'endTime').name('End time').onChange(function (value) {end = value;});
-        folder2.add(settings, 'create trajectory');
-        folder2.add(settings, 'rotation_x').min(-10).max(10).step(step).name('Rotation X axis').onChange(function (value) {rX = value;});
-        folder2.add(settings, 'rotation_y').min(-10).max(10).step(step).name('Rotation Y axis').onChange(function (value) {rY = value;});
-        folder2.add(settings, 'rotation_z').min(-10).max(10).step(step).name('Rotation Z axis').onChange(function (value) {rZ = value;});
+        folder2.add(settings, 'startTime').name('Start time').onChange(function (value) {
+            start = value;
+        });
+        folder2.add(settings, 'endTime').name('End time').onChange(function (value) {
+            end = value;
+        });
+        folder2.add(settings, 'create/save trajectory').name('create/save trajectory');
+        folder2.add(settings, 'rotation_x').min(-10).max(10).step(step).name('Rotation X axis').onChange(function (value) {
+            rX = value;
+        });
+        folder2.add(settings, 'rotation_y').min(-10).max(10).step(step).name('Rotation Y axis').onChange(function (value) {
+            rY = value;
+        });
+        folder2.add(settings, 'rotation_z').min(-10).max(10).step(step).name('Rotation Z axis').onChange(function (value) {
+            rZ = value;
+        });
         folder2.add(settings, 'add Rotation');
         //folder2.open();
 
@@ -233,6 +250,7 @@
 
         var folder4 = panel.addFolder('Create object');
 
+        //Tirar
         //meter cores e assim?? ou não permitimos criar objeos pela gui MATOS?
 
         folder4.add(settings, 'geometry', ['Cube', 'Sphere', 'Torus']).onChange(render);
@@ -261,7 +279,7 @@
     }
 
     //mouse event variables
-    var projector = new THREE.Projector();
+    projector = new THREE.Projector();
     mouse_vector = new THREE.Vector3();
     mouse = {x: 0, y: 0, z: 1};
     ray = new THREE.Raycaster(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 0));
@@ -270,53 +288,43 @@
     // Para perspectiveCamera
     function onMouseDown(e) {
         switch (e.button) {
-            case 0: // butão esquerdo
-
+            case 0: // botão esquerdo
                 //Evita que o evento chame outra função
                 e.preventDefault();
-                //Começa a tranformação entre coordenadas do rato e three.js
-                mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-                mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-                //Vector 3D que indica a direção do vetor a partir do pixel
-                mouse_vector.set(mouse.x, mouse.y, mouse.z);
-                //Define um ponto no espaço 3D de acordocom o clique do rato
-                projector.unprojectVector(mouse_vector, camera);
-                var direction = mouse_vector.sub(camera.position).normalize();
-                //Chama o raycaster com a posição da câmara e a direção
-                ray.set(camera.position, direction);
 
-                //Verifica se o raio intersetou algum objeto na cena
-                intersects = ray.intersectObjects(scene.children);
-                if (intersects[0].object.material !==  sphereMaterial) {
-                    selected_object = intersects[0].object;
-                    //alert(selected_object.name);
-                    settings.name = selected_object.name;
+                if (!creatingTrajectory) {
+                    //Começa a tranformação entre coordenadas do rato e three.js
+                    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+                    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                    //Vector 3D que indica a direção do vetor a partir do pixel
+                    mouse_vector.set(mouse.x, mouse.y, mouse.z);
+                    //Define um ponto no espaço 3D de acordocom o clique do rato
+                    projector.unprojectVector(mouse_vector, camera);
+                    var direction = mouse_vector.sub(camera.position).normalize();
+                    //Chama o raycaster com a posição da câmara e a direção
+                    ray.set(camera.position, direction);
+
+                    //Verifica se o raio intersetou algum objeto na cena
+                    intersects = ray.intersectObjects(scene.children);
+                    if (intersects[0].object.material !== sphereMaterial && intersects[0].object !== 'floor') {
+                        selected_object = intersects[0].object;
+                        settings.name = selected_object.name;
+                    }
                 }
+
                 break;
 
             case 2: // botão direito
                 e.preventDefault();
-                var geometry = new THREE.SphereGeometry(10, 32, 32);
-                var sphere = new THREE.Mesh(geometry, sphereMaterial);
-                sphere.position.set(0, 200, 0);
+                if (creatingTrajectory) {
+                    var geometry = new THREE.SphereGeometry(10, 32, 32);
+                    var sphere = new THREE.Mesh(geometry, sphereMaterial);
 
-                if (object_trajectories[selected_object.name] === undefined) {
-                    var group = new THREE.Group();
-                    group.add(sphere);
-                    object_trajectories[selected_object.name] = [{sphereGroup: group, line: null}];
+                    sphere.position.set(0, 200, 0);
+                    trajPositions.push(sphere);
+                    objects.push(sphere);
+                    scene.add(sphere);
                 }
-
-                else {
-                    var array = object_trajectories[selected_object.name];
-                    var group = array[array.length - 1]["sphereGroup"];
-                    group.add(sphere);
-                    array[array.length - 1]["sphereGroup"] = group;
-                    alert(array[array.length - 1]["sphereGroup"].children.length);
-                }
-
-                console.log(object_trajectories);
-                scene.add(sphere);
-                objects.push(sphere);
                 break;
         }
     }
@@ -345,22 +353,62 @@
         stats.update();
     }
 
-    var radius = 600;
     var prevTime = Date.now();
+    var t = 0;
+
+    var up = new THREE.Vector3(0, 1, 0);
+    var axis = new THREE.Vector3();
+    var pt, radians, axis, tangent;
 
     function render() {
-        if (isPlay)
+        secondsPassed = clock.getElapsedTime();
+
+        if (isPlay) {
             playAnimations();
+
+            var object = selected_object;
+            if (t === 0) {
+                console.log("OBJECT INITIAL POS");
+                console.log(object.position);
+            }
+
+            // teste só para 1 trajetoria
+            if (t < 1) {
+                var spline = object_trajectories[object.name][0]['line'];
+
+
+                // set the marker position
+                //object.position.copy(spline.getPointAt(t));
+                pt = spline.getPointAt(t);
+                console.log("PT");
+                console.log(pt);
+                object.position.set(pt.x, pt.y, pt.z);
+                console.log("OBJECT POS");
+                console.log(object.position);
+
+                // get the tangent to the curve
+                tangent = spline.getTangent(t).normalize();
+
+                // calculate the axis to rotate around
+                //axis.crossVectors(up, tangent).normalize();
+
+                // calcluate the angle between the up vector and the tangent
+                radians = Math.acos(up.dot(tangent));
+
+                // set the quaternion
+                object.quaternion.setFromAxisAngle(axis, radians);
+                t += 0.005;
+                // 60fps -> 60 incrementos - 1 segundo
+                // 3 segundos - 180 incrementos  t = [0,1]  1 / 180 = 0.005555555555555556
+            }
+        }
 
         renderer.render(scene, camera);
         //controls.update();
     }
 
-    function playAnimations() {
-        if (selected_object) {
-            selected_object.rotation.y += theta;
-        }
 
+    function playAnimations() {
         if (mixers.length > 0) {
 
             var time = Date.now();
@@ -370,33 +418,6 @@
             prevTime = time;
         }
     }
-
-
-    /*
-    var spline = new THREE.SplineCurve3([
-    new THREE.Vector3(0, 0, 0),
-    new THREE.Vector3(0, 200, 0),
-    new THREE.Vector3(150, 150, 0),
-    new THREE.Vector3(150, 50, 0),
-    new THREE.Vector3(250, 100, 0),
-    new THREE.Vector3(250, 300, 0)
-]);
-
-var material = new THREE.LineBasicMaterial({
-color: 0xff00f0,
-});
-
-var geometry = new THREE.Geometry();
-var splinePoints = spline.getPoints(numPoints);
-
-for(var i = 0; i < splinePoints.length; i++){
-geometry.vertices.push(splinePoints[i]);
-}
-
-var line = new THREE.Line(geometry, material);
-scene.add(line);
-
-*/
 
 </script>
 </body>
