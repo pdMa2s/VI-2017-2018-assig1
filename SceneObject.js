@@ -43,7 +43,6 @@ class SceneObject {
     hasTrajectoryAnimation() {
         for (var i = 0; i < this.animations.length; i++) {
             if (this.animations[i].type === "trajectory") {
-                alert("ENTROU");
                 return true;
             }
         }

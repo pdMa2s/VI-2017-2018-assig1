@@ -44,40 +44,37 @@ function rotated(rXFps, rYFps, rZFps) {
     return (rotatedX <= rX * 0.85) && (rotatedY <= rY * 0.85) && (rotatedZ <= rZ * 0.85);
 }
 
-
 var numPoints = 100; // line trajectory points
 var creatingTrajectory = false;
 var fps = 60;
-var trajectoryColors = [];
-trajectoryColors.push(new THREE.Color(0xe6194b));
-trajectoryColors.push(new THREE.Color(0x3cb44b));
-trajectoryColors.push(new THREE.Color(0xffe119));
-trajectoryColors.push(new THREE.Color(0x0082c8));
-trajectoryColors.push(new THREE.Color(0xf58231));
+var trajectoryColors = [new THREE.Color(0xe6194b), new THREE.Color(0x3cb44b), new THREE.Color(0xffe119),
+new THREE.Color(0x0082c8), new THREE.Color(0xf58231)];
 
 
 var trajPositions = [];
 
 function createTrajectory() {
-    if (creatingTrajectory === true) {
+    creatingTrajectory = !creatingTrajectory;
+
+    if (creatingTrajectory === false) {
+
         if (trajPositions.length <= 1) {
+            creatingTrajectory = true;
             alert("Must define at least one trajectory point");
         }
+
         else {
             var line = generateTrajectoryLine();
 
-            var animation = new Animation(start, end);
+            var animation = new Animation(animationStart, animationEnd);
             animation.trajectory(trajPositions, line);
             objCollection.addAnimation(selected_object.name, animation);
-            alert(objCollection.getObject(selected_object.name).getNumberOfTrajectories());
-
 
             //meter pos em vez de esferas
             //generateTrajectoryLine(selected_object);
             //chamar a cena animation.cenas e passar pos
             // tirar elemento do objects esferas tbm para nao ser possivel mudar a pos
             // ver se traje pos > 1
-            creatingTrajectory = false;
         }
     }
 
@@ -87,7 +84,7 @@ function createTrajectory() {
         if (objCollection.getObject(selected_object.name).hasTrajectoryAnimation() === false) {
             trajPositions.push(selected_object.position);
         }
-        creatingTrajectory = true;
+
     }
 }
 
@@ -97,7 +94,6 @@ function generateTrajectoryLine() {
     var points = [];
 
     if (obj.hasTrajectoryAnimation()) {
-        alert("TEM MAIS QUE 1 TRAJ");
 
         for (var i = obj.animations.length - 1; i >= 0; i--) {
             var anim = obj.animations[i];
@@ -123,10 +119,6 @@ function generateTrajectoryLine() {
         }
     }
 
-    console.log("POINTS");
-    console.log(points);
-
-
     var spline = new THREE.CatmullRomCurve3(points);
 
     var geometry = new THREE.Geometry();
@@ -140,16 +132,16 @@ function generateTrajectoryLine() {
     var line = new THREE.Line(geometry, lineMaterial);
     line.material.color = new THREE.Color(0xe6194b);
 
-    /*
     var nTraj = obj.getNumberOfTrajectories();
-    if (nTraj <= trajectoryColors.length) {
-        line.material.color = trajectoryColors[nTraj - 1];
+
+    if (nTraj < trajectoryColors.length) {
+        line.material.color = trajectoryColors[nTraj];
     }
 
     else {
-        line.material.color = trajectoryColors[(nTraj - 1) % (trajectoryColors.length)];
+        line.material.color = trajectoryColors[nTraj % trajectoryColors.length];
     }
-*/
+
     scene.add(line);
     return line;
 }
