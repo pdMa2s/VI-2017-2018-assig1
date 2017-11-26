@@ -110,7 +110,7 @@ Object.assign( Interpolant.prototype, {
 
 							if ( t0 === undefined ) {
 
-								// before start
+								// before animationStart
 
 								this._cachedIndex = 0;
 								return this.beforeStart_( 0, t, t1 );

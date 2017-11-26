@@ -36,7 +36,7 @@ Sidebar.Geometry.CircleGeometry = function ( editor, object ) {
 	var thetaStartRow = new UI.Row();
 	var thetaStart = new UI.Number( parameters.thetaStart ).onChange( update );
 
-	thetaStartRow.add( new UI.Text( 'Theta start' ).setWidth( '90px' ) );
+	thetaStartRow.add( new UI.Text( 'Theta animationStart' ).setWidth( '90px' ) );
 	thetaStartRow.add( thetaStart );
 
 	container.add( thetaStartRow );

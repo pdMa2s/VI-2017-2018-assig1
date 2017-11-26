@@ -56,13 +56,13 @@ Object.assign( THREE.VTKLoader.prototype, THREE.EventDispatcher.prototype, {
 			// the first integer is the number of polygon nodes
 			var patConnectivity = /^(\d+)\s+([\s\d]*)/;
 
-			// indicates start of vertex data section
+			// indicates animationStart of vertex data section
 			var patPOINTS = /^POINTS /;
 
-			// indicates start of polygon connectivity section
+			// indicates animationStart of polygon connectivity section
 			var patPOLYGONS = /^POLYGONS /;
 
-			// indicates start of triangle strips section
+			// indicates animationStart of triangle strips section
 			var patTRIANGLE_STRIPS = /^TRIANGLE_STRIPS /;
 
 			// POINT_DATA number_of_values

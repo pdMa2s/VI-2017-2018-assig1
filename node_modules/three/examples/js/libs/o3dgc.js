@@ -606,7 +606,7 @@ var o3dgc = (function () {
     };
     module.ArithmeticDecoder.prototype.StartDecoder = function () {
         if (this.m_mode !== 0) {
-            Console.log("cannot start decoder");
+            Console.log("cannot animationStart decoder");
             return module.O3DGC_ERROR_AC;
         }
         if (this.m_bufferSize === 0) {

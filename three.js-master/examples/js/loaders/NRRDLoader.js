@@ -284,7 +284,7 @@ THREE.NRRDLoader.prototype = {
 		if ( headerObject.encoding === 'gzip' || headerObject.encoding === 'gz' ) {
 
 			// we need to decompress the datastream
-			// here we start the unzipping and get a typed Uint8Array back
+			// here we animationStart the unzipping and get a typed Uint8Array back
 			var inflate = new Zlib.Gunzip( new Uint8Array( _data ) );
 			_data = inflate.decompress();
 

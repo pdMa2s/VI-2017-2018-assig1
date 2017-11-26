@@ -34,7 +34,7 @@ exports.ancestor = ancestor;
 // nodes).
 exports.recursive = recursive;
 
-// Find a node with a given start, end, and type (all are optional,
+// Find a node with a given animationStart, end, and type (all are optional,
 // null can be used as wildcard). Returns a {node, state} object, or
 // undefined when it doesn't find a matching node.
 exports.findNodeAt = findNodeAt;

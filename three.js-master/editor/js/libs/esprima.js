@@ -938,7 +938,7 @@
 
         ch = source[index];
         assert(isDecimalDigit(ch.charCodeAt(0)) || (ch === '.'),
-            'Numeric literal must start with a decimal digit or a decimal point');
+            'Numeric literal must animationStart with a decimal digit or a decimal point');
 
         start = index;
         number = '';
@@ -1175,7 +1175,7 @@
         var ch, str, classMarker, terminated, body;
 
         ch = source[index];
-        assert(ch === '/', 'Regular expression literal must start with a slash');
+        assert(ch === '/', 'Regular expression literal must animationStart with a slash');
         str = source[index++];
 
         classMarker = false;
@@ -1447,7 +1447,7 @@
         }
 
 
-        // Dot (.) U+002E can also start a floating-point number, hence the need
+        // Dot (.) U+002E can also animationStart a floating-point number, hence the need
         // to check the next character.
         if (ch === 0x2E) {
             if (isDecimalDigit(source.charCodeAt(index + 1))) {
@@ -1460,7 +1460,7 @@
             return scanNumericLiteral();
         }
 
-        // Slash (/) U+002F can also start a regex.
+        // Slash (/) U+002F can also animationStart a regex.
         if (extra.tokenize && ch === 0x2F) {
             return advanceSlash();
         }

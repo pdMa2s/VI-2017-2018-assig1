@@ -265,7 +265,7 @@ SEA3D.Deflate = function () {
 
 						}
 						if ( w + j > el && w < el )
-							j = el - w;	// make EOB code end at table
+							j = el - w;	// make EOB code animationEnd at table
 						z = 1 << j;	// table entries for j-bit table
 						lx[ 1 + h ] = j; // set table size in stack
 
@@ -308,7 +308,7 @@ SEA3D.Deflate = function () {
 					r.e = 99; // out of values--invalid code
 					else if ( p[ pidx ] < s ) {
 
-						r.e = ( p[ pidx ] < 256 ? 16 : 15 ); // 256 is end-of-block code
+						r.e = ( p[ pidx ] < 256 ? 16 : 15 ); // 256 is animationEnd-of-block code
 						r.n = p[ pidx ++ ];	// simple code is just the value
 
 					} else {
@@ -352,7 +352,7 @@ SEA3D.Deflate = function () {
 			/* Return true (1) if we were given an incomplete table */
 			this.status = ( ( y != 0 && g != 1 ) ? 1 : 0 );
 
-		} /* end of constructor */
+		} /* animationEnd of constructor */
 
 	}
 
@@ -406,7 +406,7 @@ SEA3D.Deflate = function () {
 		n = 0;
 		for ( ;; ) {
 
-			// do until end of block
+			// do until animationEnd of block
 			zip_NEEDBITS( zip_bl );
 			t = zip_tl.list[ zip_GETBITS( zip_bl ) ];
 			e = t.e;
@@ -434,7 +434,7 @@ SEA3D.Deflate = function () {
 
 			}
 
-			// exit if end of block
+			// exit if animationEnd of block
 			if ( e == 15 )
 			break;
 
@@ -725,7 +725,7 @@ SEA3D.Deflate = function () {
 		if ( h.status != 0 )
 			return - 1;
 
-		// decompress until an end-of-block code
+		// decompress until an animationEnd-of-block code
 		return zip_inflate_codes( buff, off, size );
 
 	}

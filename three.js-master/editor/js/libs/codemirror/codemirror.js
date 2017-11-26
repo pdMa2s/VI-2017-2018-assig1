@@ -2478,8 +2478,8 @@
     });
   }
 
-  // Finds the line to start with when starting a parse. Tries to
-  // find a line with a stateAfter, so that it can start with a
+  // Finds the line to animationStart with when starting a parse. Tries to
+  // find a line with a stateAfter, so that it can animationStart with a
   // valid state. If that fails, it returns the line with the
   // smallest indentation, which tends to need the least context to
   // parse correctly.
@@ -3564,7 +3564,7 @@
   }
 
   // A mouse down can be a single click, double click, triple click,
-  // start of selection drag, start of text drag, new cursor
+  // animationStart of selection drag, animationStart of text drag, new cursor
   // (ctrl-click), rectangle drag (alt-drag), or xwin
   // middle-click-paste. Or it might be a click on something we should
   // not interfere with, such as a scrollbar or widget.
@@ -4317,7 +4317,7 @@
   }
 
   // Used by replaceSelections to allow moving the selection to the
-  // start or around the replaced test. Hint may be "start" or "around".
+  // animationStart or around the replaced test. Hint may be "animationStart" or "around".
   function computeReplacedSel(doc, changes, hint) {
     var out = [];
     var oldPrev = Pos(doc.first, 0), newPrev = oldPrev;
@@ -4761,7 +4761,7 @@
       line.stateAfter = null;
       return true;
     } else {
-      // Ensure that, if the cursor was in the whitespace at the start
+      // Ensure that, if the cursor was in the whitespace at the animationStart
       // of the line, it is moved to the end of that space.
       for (var i = 0; i < doc.sel.ranges.length; i++) {
         var range = doc.sel.ranges[i];
@@ -4814,7 +4814,7 @@
   // Used for horizontal relative motion. Dir is -1 or 1 (left or
   // right), unit can be "char", "column" (like char, but doesn't
   // cross line boundaries), "word" (across next word), or "group" (to
-  // the start of next group of word or non-word-non-whitespace
+  // the animationStart of next group of word or non-word-non-whitespace
   // chars). The visually param controls whether, in right-to-left
   // text, direction 1 means to move towards the next index in the
   // string, or towards the character to the right of the current
@@ -5359,7 +5359,7 @@
   var Init = CodeMirror.Init = {toString: function(){return "CodeMirror.Init";}};
 
   // These two are, on init, called from the constructor because they
-  // have to be initialized before the editor can start at all.
+  // have to be initialized before the editor can animationStart at all.
   option("value", "", function(cm, val) {
     cm.setValue(val);
   }, true);
@@ -6047,7 +6047,7 @@
   // indicating that such a marker is present on that line. Multiple
   // lines may point to the same marker when it spans across lines.
   // The spans will have null for their from/to properties when the
-  // marker continues beyond the start/end of the line. Markers have
+  // marker continues beyond the animationStart/end of the line. Markers have
   // links back to the lines they currently touch.
 
   var nextMarkerId = 0;
@@ -6548,7 +6548,7 @@
   function collapsedSpanAtEnd(line) { return collapsedSpanAtSide(line, false); }
 
   // Test whether there exists a collapsed span that partially
-  // overlaps (covers the start or end, but not both) of a new span.
+  // overlaps (covers the animationStart or end, but not both) of a new span.
   // Such overlap is not allowed.
   function conflictingCollapsedRange(doc, lineNo, from, to, marker) {
     var line = getLine(doc, lineNo);
@@ -6568,7 +6568,7 @@
 
   // A visual line is a line as drawn on the screen. Folding, for
   // example, can cause multiple logical lines to appear on the same
-  // visual line. This finds the start of the visual line that the
+  // visual line. This finds the animationStart of the visual line that the
   // given line is part of (usually that is the line itself).
   function visualLine(line) {
     var merged;
@@ -6588,14 +6588,14 @@
     return lines;
   }
 
-  // Get the line number of the start of the visual line that the
+  // Get the line number of the animationStart of the visual line that the
   // given line number is part of.
   function visualLineNo(doc, lineN) {
     var line = getLine(doc, lineN), vis = visualLine(line);
     if (line == vis) return lineN;
     return lineNo(vis);
   }
-  // Get the line number of the start of the next visual line after
+  // Get the line number of the animationStart of the next visual line after
   // the given line.
   function visualLineEndNo(doc, lineN) {
     if (lineN > doc.lastLine()) return lineN;
@@ -7054,7 +7054,7 @@
       style = style ? style + " cm-force-border" : "cm-force-border";
       var start = builder.pos, end = start + text.length;
       for (;;) {
-        // Find the part that overlaps with the start of this text
+        // Find the part that overlaps with the animationStart of this text
         for (var i = 0; i < order.length; i++) {
           var part = order[i];
           if (part.to > start && part.from <= start) break;
@@ -7155,7 +7155,7 @@
 
   // DOCUMENT DATA STRUCTURE
 
-  // By default, updates that start and end at the beginning of a line
+  // By default, updates that animationStart and end at the beginning of a line
   // are treated specially, in order to make the association of line
   // widgets and marker elements with the text behave more intuitive.
   function isWholeLineUpdate(doc, change) {
@@ -7945,7 +7945,7 @@
         cur.changes.push(historyChangeFromChange(doc, change));
       }
     } else {
-      // Can not be merged, start a new event.
+      // Can not be merged, animationStart a new event.
       var before = lst(hist.done);
       if (!before || !before.ranges)
         pushSelectionToHistory(doc.sel, hist.done);
@@ -8190,7 +8190,7 @@
   var orphanDelayedCallbacks = null;
 
   // Often, we want to signal events at a point where we are in the
-  // middle of some work, but don't want the handler to start calling
+  // middle of some work, but don't want the handler to animationStart calling
   // other methods on the editor, which might be in an inconsistent
   // state or simply not expect any other events to happen.
   // signalLater looks whether there are any handlers, and schedules
@@ -8776,7 +8776,7 @@
 
       // W1. Examine each non-spacing mark (NSM) in the level run, and
       // change the type of the NSM to the type of the previous
-      // character. If the NSM is at the start of the level run, it will
+      // character. If the NSM is at the animationStart of the level run, it will
       // get the type of sor.
       for (var i = 0, prev = outerType; i < len; ++i) {
         var type = types[i];

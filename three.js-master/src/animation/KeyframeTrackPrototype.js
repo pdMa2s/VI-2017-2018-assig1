@@ -155,7 +155,7 @@ KeyframeTrackPrototype = {
 	},
 
 	// removes keyframes before and after animation without changing any values within the range [startTime, endTime].
-	// IMPORTANT: We do not shift around keys to the start of the track time, because for interpolated keys this will change their values
+	// IMPORTANT: We do not shift around keys to the animationStart of the track time, because for interpolated keys this will change their values
 	trim: function ( startTime, endTime ) {
 
 		var times = this.times,

@@ -14785,7 +14785,7 @@ function BoxBufferGeometry( width, height, depth, widthSegments, heightSegments,
 
 		scope.addGroup( groupStart, groupCount, materialIndex );
 
-		// calculate new start value for groups
+		// calculate new animationStart value for groups
 
 		groupStart += groupCount;
 
@@ -28757,7 +28757,7 @@ function CylinderBufferGeometry( radiusTop, radiusBottom, height, radialSegments
 
 		scope.addGroup( groupStart, groupCount, 0 );
 
-		// calculate new start value for groups
+		// calculate new animationStart value for groups
 
 		groupStart += groupCount;
 
@@ -28868,7 +28868,7 @@ function CylinderBufferGeometry( radiusTop, radiusBottom, height, radialSegments
 
 		scope.addGroup( groupStart, groupCount, top === true ? 1 : 2 );
 
-		// calculate new start value for groups
+		// calculate new animationStart value for groups
 
 		groupStart += groupCount;
 
@@ -31343,7 +31343,7 @@ Object.assign( Interpolant.prototype, {
 
 							if ( t0 === undefined ) {
 
-								// before start
+								// before animationStart
 
 								this._cachedIndex = 0;
 								return this.beforeStart_( 0, t, t1 );
@@ -31854,7 +31854,7 @@ KeyframeTrackPrototype = {
 	},
 
 	// removes keyframes before and after animation without changing any values within the range [startTime, endTime].
-	// IMPORTANT: We do not shift around keys to the start of the track time, because for interpolated keys this will change their values
+	// IMPORTANT: We do not shift around keys to the animationStart of the track time, because for interpolated keys this will change their values
 	trim: function ( startTime, endTime ) {
 
 		var times = this.times,
@@ -35266,7 +35266,7 @@ CurvePath.prototype = Object.assign( Object.create( Curve.prototype ), {
 
 	closePath: function () {
 
-		// Add a line curve if start and end of lines are not connected
+		// Add a line curve if animationStart and end of lines are not connected
 		var startPoint = this.curves[ 0 ].getPoint( 0 );
 		var endPoint = this.curves[ this.curves.length - 1 ].getPoint( 1 );
 
@@ -38494,7 +38494,7 @@ function AnimationAction( mixer, clip, localRoot ) {
 	this._loopCount = -1;
 
 	// global mixer time when the action is to be started
-	// it's set back to 'null' upon start of the action
+	// it's set back to 'null' upon animationStart of the action
 	this._startTime = null;
 
 	// scaled local time of the action
@@ -38515,7 +38515,7 @@ function AnimationAction( mixer, clip, localRoot ) {
 	this.clampWhenFinished 	= false;	// keep feeding the last frame?
 
 	this.zeroSlopeAtStart 	= true;		// for smooth interpolation w/o separate
-	this.zeroSlopeAtEnd		= true;		// clips for start, loop and end
+	this.zeroSlopeAtEnd		= true;		// clips for animationStart, loop and end
 
 }
 
@@ -38786,7 +38786,7 @@ Object.assign( AnimationAction.prototype, {
 
 		if ( startTime !== null ) {
 
-			// check for scheduled start of action
+			// check for scheduled animationStart of action
 
 			var timeRunning = ( time - startTime ) * timeDirection;
 			if ( timeRunning < 0 || timeDirection === 0 ) {
@@ -38795,7 +38795,7 @@ Object.assign( AnimationAction.prototype, {
 
 			}
 
-			// start
+			// animationStart
 
 			this._startTime = null; // unschedule
 			deltaTime = timeDirection * timeRunning;

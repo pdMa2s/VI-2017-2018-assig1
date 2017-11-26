@@ -626,7 +626,7 @@ THREE.ColladaLoader = function () {
 
 	}
 
-	//Move the vertices into the pose that is proper for the start of the animation
+	//Move the vertices into the pose that is proper for the animationStart of the animation
 	function skinToBindPose(geometry,skeleton,skinController) {
 
 		var bones = [];

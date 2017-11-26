@@ -27,6 +27,7 @@
 <script src="ObjectCollection.js"></script>
 <script src="modelLoader.js"></script>
 <script src="SceneObject.js"></script>
+<script src="Animation.js"></script>
 <script src="createObjectAnimation.js"></script>
 <script src="Animator.js"></script>
 
@@ -37,7 +38,7 @@
     var sphereMaterial = new THREE.MeshBasicMaterial({color: 0xff0000});
 
 
-    // Boolean for start and restart
+    // Boolean for animationStart and restart
     var theta = 0;
     var initAnim = true;
     var runAnim = false;
@@ -184,7 +185,7 @@
             'import model': "",
             'wireframe': false,
             'start/pause': StartAnimation,
-            'create trajectory': createTrajectory,
+            'create/save trajectory': handleTrajectoryCreation,
             'geometry': 'Cube',
             'rotation_x': 0,
             'rotation_y': 0,
@@ -195,7 +196,7 @@
             'endTime': 0,
             'add Rotation': createRotation
         };
-        var step = 0.1;
+
         folder1.add(settings, 'horse');
         folder1.add(settings, 'flamingo');
         folder1.add(settings, 'parrot');
@@ -212,14 +213,14 @@
         });
         //folder1.add( settings,  'import model').onChange(function(value){addUserModel(value)});
         folder1.open();
-
+        var step = 0.0001;
         folder2.add(settings, 'start/pause');
-        folder2.add(settings, 'startTime').name('Start time').onChange(function (value) {start = value;});
-        folder2.add(settings, 'endTime').name('End time').onChange(function (value) {end = value;});
-        folder2.add(settings, 'create trajectory');
-        folder2.add(settings, 'rotation_x').min(-10).max(10).step(step).name('Rotation X axis').onChange(function (value) {rX = value;});
-        folder2.add(settings, 'rotation_y').min(-10).max(10).step(step).name('Rotation Y axis').onChange(function (value) {rY = value;});
-        folder2.add(settings, 'rotation_z').min(-10).max(10).step(step).name('Rotation Z axis').onChange(function (value) {rZ = value;});
+        folder2.add(settings, 'startTime').name('Start time').onChange(function (value) {animationStart = value;});
+        folder2.add(settings, 'endTime').name('End time').onChange(function (value) {animationEnd = value;});
+        folder2.add(settings, 'create/save trajectory');
+        folder2.add(settings, 'rotation_x').min(-1).max(1).step(step).name('Rotation X axis').onChange(function (value) {rX = value;});
+        folder2.add(settings, 'rotation_y').min(-1).max(1).step(step).name('Rotation Y axis').onChange(function (value) {rY = value;});
+        folder2.add(settings, 'rotation_z').min(-1).max(1).step(step).name('Rotation Z axis').onChange(function (value) {rZ = value;});
         folder2.add(settings, 'add Rotation');
         //folder2.open();
 
@@ -344,23 +345,62 @@
         render();
         stats.update();
     }
-
+    var timeBeforeAnimation = 0;
+    function updateTimeBefore() {
+        if(!isPlay)
+            timeBeforeAnimation = Date.now();
+    }
     var radius = 600;
     var prevTime = Date.now();
-
+    var t = 0;
+    var up = new THREE.Vector3(0, 1, 0);
+    var axis = new THREE.Vector3();
+    var pt, radians, axis, tangent;
     function render() {
-        if (isPlay)
+        updateTimeBefore();
+        if (isPlay){
             playAnimations();
+            var object = selected_object;
+            //rotateObject(object,timeBeforeAnimation, 3);
+
+            /*if( t === 0) {
+                console.log("OBJECT INITIAL POS");
+                console.log(object.position);
+            }
+              if (t < 1) {
+                var spline = object_trajectories[object.name][0]['line'];
+
+                // set the marker position
+                //object.position.copy(spline.getPointAt(t));
+                pt = spline.getPointAt(t);
+                console.log("PT");
+                console.log(pt);
+                object.position.set(pt.x, pt.y, pt.z);
+                console.log("OBJECT POS");
+                console.log(object.position);
+
+                // get the tangent to the curve
+                tangent = spline.getTangent(t).normalize();
+
+                // calculate the axis to rotate around
+                //axis.crossVectors(up, tangent).normalize();
+
+                // calcluate the angle between the up vector and the tangent
+                radians = Math.acos(up.dot(tangent));
+
+                // set the quaternion
+                object.quaternion.setFromAxisAngle(axis, radians);
+                t += 0.001;
+                // 60fps -> 60 incrementos - 1 segundo
+                // 3 segundos - 180 incrementos  t = [0,1]  1 / 180 = 0.005555555555555556
+            }*/
+        }
 
         renderer.render(scene, camera);
         //controls.update();
     }
 
     function playAnimations() {
-        if (selected_object) {
-            selected_object.rotation.y += theta;
-        }
-
         if (mixers.length > 0) {
 
             var time = Date.now();

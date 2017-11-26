@@ -274,7 +274,7 @@ THREE.VRMLLoader.prototype = {
 
 								}
 
-								// start new one
+								// animationStart new one
 								index = [];
 
 							} else {
@@ -296,7 +296,7 @@ THREE.VRMLLoader.prototype = {
 
 						}
 
-						// start new one
+						// animationStart new one
 						index = [];
 
 						this.isRecordingFaces = false;

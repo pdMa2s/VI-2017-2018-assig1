@@ -88,7 +88,7 @@ THREE.SimplifyModifier = function() {
 	}
 
 	function computeEdgeCostAtVertex( v ) {
-		// compute the edge collapse cost for all edges that start
+		// compute the edge collapse cost for all edges that animationStart
 		// from vertex v.  Since we are only interested in reducing
 		// the object by selecting the min cost edge at each step, we
 		// only cache the cost of the least cost edge at this vertex

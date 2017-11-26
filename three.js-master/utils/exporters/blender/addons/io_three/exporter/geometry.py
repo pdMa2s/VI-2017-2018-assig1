@@ -519,7 +519,7 @@ class Geometry(base_classes.BaseNode):
                 print( dir(self.node) )
 
                 group = {
-                    'start': len(new_index),
+                    'animationStart': len(new_index),
                     'count': len(face_array)*3,
                     'materialIndex': mat_index
                 }
@@ -535,7 +535,7 @@ class Geometry(base_classes.BaseNode):
                 self[constants.GROUPS]=groups
             #else:
             #    self[constants.GROUPS]=[{
-            #    'start':0,
+            #    'animationStart':0,
             #    'count':n,
             #   'materialIndex':0
             #}]

@@ -907,7 +907,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	window.addEventListener( 'keydown', onKeyDown, false );
 
-	// force an update at start
+	// force an update at animationStart
 
 	this.update();
 

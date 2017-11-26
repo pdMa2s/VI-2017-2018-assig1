@@ -35,7 +35,7 @@ CurvePath.prototype = Object.assign( Object.create( Curve.prototype ), {
 
 	closePath: function () {
 
-		// Add a line curve if start and end of lines are not connected
+		// Add a line curve if animationStart and animationEnd of lines are not connected
 		var startPoint = this.curves[ 0 ].getPoint( 0 );
 		var endPoint = this.curves[ this.curves.length - 1 ].getPoint( 1 );
 

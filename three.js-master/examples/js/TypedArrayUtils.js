@@ -449,7 +449,7 @@ THREE.TypedArrayUtils.Kdtree.BinaryHeap.prototype = {
 		var end = this.content.pop();
 
 		// If there are any elements left, put the end element at the
-		// start, and let it sink down.
+		// animationStart, and let it sink down.
 		if ( this.content.length > 0 ) {
 
 			this.content[ 0 ] = end;

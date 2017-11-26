@@ -451,7 +451,7 @@ lp.parseObj = function () {
   }
   this.popCx();
   if (!this.eat(tt.braceR)) {
-    // If there is no closing brace, make the node span to the start
+    // If there is no closing brace, make the node span to the animationStart
     // of the next token (this is useful for Tern)
     this.last.end = this.tok.start;
     if (this.options.locations) this.last.loc.end = this.tok.loc.start;
@@ -578,7 +578,7 @@ lp.parseExprList = function (close, allowEmpty) {
   }
   this.popCx();
   if (!this.eat(close)) {
-    // If there is no closing brace, make the node span to the start
+    // If there is no closing brace, make the node span to the animationStart
     // of the next token (this is useful for Tern)
     this.last.end = this.tok.start;
     if (this.options.locations) this.last.loc.end = this.tok.loc.start;
@@ -1049,7 +1049,7 @@ lp.parseClass = function (isStatement) {
   }
   this.popCx();
   if (!this.eat(tt.braceR)) {
-    // If there is no closing brace, make the node span to the start
+    // If there is no closing brace, make the node span to the animationStart
     // of the next token (this is useful for Tern)
     this.last.end = this.tok.start;
     if (this.options.locations) this.last.loc.end = this.tok.loc.start;

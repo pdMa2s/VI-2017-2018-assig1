@@ -79,7 +79,7 @@ MIX_COLORS = 'mixColors'
 EXTRA_VGROUPS = 'extraVertexGroups'
 INDEX = 'index'
 DRAW_CALLS = 'drawcalls'
-DC_START = 'start'
+DC_START = 'animationStart'
 DC_COUNT = 'count'
 DC_INDEX = 'index'
 

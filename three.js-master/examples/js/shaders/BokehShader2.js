@@ -82,7 +82,7 @@ THREE.BokehShader = {
 		"make sure that these two values are the same for your camera, otherwise distances will be wrong.",
 		"*/",
 
-		"uniform float znear; // camera clipping start",
+		"uniform float znear; // camera clipping animationStart",
 		"uniform float zfar; // camera clipping end",
 
 		"//------------------------------------------",
@@ -94,9 +94,9 @@ THREE.BokehShader = {
 		"const int maxringsamples = rings * samples;",
 
 		"uniform bool manualdof; // manual dof calculation",
-		"float ndofstart = 1.0; // near dof blur start",
+		"float ndofstart = 1.0; // near dof blur animationStart",
 		"float ndofdist = 2.0; // near dof blur falloff distance",
-		"float fdofstart = 1.0; // far dof blur start",
+		"float fdofstart = 1.0; // far dof blur animationStart",
 		"float fdofdist = 3.0; // far dof blur falloff distance",
 
 		"float CoC = 0.03; //circle of confusion size in mm (35mm film = 0.03mm)",

@@ -211,7 +211,7 @@
         },
         "drawCalls": {
           "!type": "[]",
-          "!doc": "For geometries that use indexed triangles, this Array can be used to split the object into multiple WebGL draw calls. Each draw call will draw some subset of the vertices in this geometry using the configured [page:Material shader]. This may be necessary if, for instance, you have more than 65535 vertices in your object. \n\t\tEach element is an object of the form:\n\t\t<code>{ start: Integer, count: Integer, index: Integer }</code>\n\t\twhere start specifies the index of the first vertex in this draw call, count specifies how many vertices are included, and index specifies an optional offset.\n\n\t\tUse addDrawCall to add draw calls, rather than modifying this array directly."
+          "!doc": "For geometries that use indexed triangles, this Array can be used to split the object into multiple WebGL draw calls. Each draw call will draw some subset of the vertices in this geometry using the configured [page:Material shader]. This may be necessary if, for instance, you have more than 65535 vertices in your object. \n\t\tEach element is an object of the form:\n\t\t<code>{ animationStart: Integer, count: Integer, index: Integer }</code>\n\t\twhere animationStart specifies the index of the first vertex in this draw call, count specifies how many vertices are included, and index specifies an optional offset.\n\n\t\tUse addDrawCall to add draw calls, rather than modifying this array directly."
         },
         "boundingBox": {
           "!type": "+THREE.Box3",
@@ -230,7 +230,7 @@
           "!doc": "Adds an attribute to this geometry. Use this rather than the attributes property, \n\t\tbecause an internal array of attributes is maintained to speed up iterating over\n\t\tattributes."
         },
         "addDrawCall": {
-          "!type": "fn(start: number, count: number, indexOffset: number)",
+          "!type": "fn(animationStart: number, count: number, indexOffset: number)",
           "!doc": "Adds a draw call to this geometry; see the drawcalls property for details."
         },
         "applyMatrix": {
@@ -278,7 +278,7 @@
         },
         "startTime": {
           "!type": "number",
-          "!doc": "When the clock is running, It holds the start time of the clock. <br>\n\t\tThis counted from the number of milliseconds elapsed since 1 January 1970 00:00:00 UTC."
+          "!doc": "When the clock is running, It holds the animationStart time of the clock. <br>\n\t\tThis counted from the number of milliseconds elapsed since 1 January 1970 00:00:00 UTC."
         },
         "oldTime": {
           "!type": "number",
@@ -286,7 +286,7 @@
         },
         "elapsedTime": {
           "!type": "number",
-          "!doc": "When the clock is running, It holds the time elapsed between the start of the clock to the previous update.<br>\n\t\tThis counted from the number of milliseconds elapsed since 1 January 1970 00:00:00 UTC."
+          "!doc": "When the clock is running, It holds the time elapsed between the animationStart of the clock to the previous update.<br>\n\t\tThis counted from the number of milliseconds elapsed since 1 January 1970 00:00:00 UTC."
         },
         "running": {
           "!type": "bool",
@@ -1293,7 +1293,7 @@
       "prototype": {
         "!proto": "THREE.Geometry.prototype"
       },
-      "!doc": "CircleGeometry is a simple shape of Euclidean geometry.  It is contructed from a number of triangular segments that are oriented around a central point and extend as far out as a given radius.  It is built counter-clockwise from a start angle and a given central angle.  It can also be used to create regular polygons, where the number of segments determines the number of sides.",
+      "!doc": "CircleGeometry is a simple shape of Euclidean geometry.  It is contructed from a number of triangular segments that are oriented around a central point and extend as far out as a given radius.  It is built counter-clockwise from a animationStart angle and a given central angle.  It can also be used to create regular polygons, where the number of segments determines the number of sides.",
       "!type": "fn(radius: number, segments: number, thetaStart: number, thetaLength: number)"
     },
     "CubeGeometry": {
@@ -1725,7 +1725,7 @@
         "!proto": "THREE.Object3D.prototype",
         "render": {
           "!type": "fn(renderCallback: function)",
-          "!doc": "This function needs to be overridden to start the creation of the object and should call renderCallback when finished."
+          "!doc": "This function needs to be overridden to animationStart the creation of the object and should call renderCallback when finished."
         }
       },
       "!doc": "base class for immediate rendering objects.",
@@ -3316,12 +3316,12 @@
         "start": "+THREE.Vector3",
         "end": "+THREE.Vector3",
         "set": {
-          "!type": "fn(start: +THREE.Vector3, end: +THREE.Vector3) -> +THREE.Line3",
-          "!doc": "Sets the start and end values by copying the provided vectors."
+          "!type": "fn(animationStart: +THREE.Vector3, end: +THREE.Vector3) -> +THREE.Line3",
+          "!doc": "Sets the animationStart and end values by copying the provided vectors."
         },
         "copy": {
           "!type": "fn(line: +THREE.Line3) -> +THREE.Line3",
-          "!doc": "Copies the passed line's start and end vectors to this line."
+          "!doc": "Copies the passed line's animationStart and end vectors to this line."
         },
         "clone": {
           "!type": "fn() -> +THREE.Line3",
@@ -3329,7 +3329,7 @@
         },
         "equals": {
           "!type": "fn(line: +THREE.Line3) -> bool",
-          "!doc": "<h3>[method:Float distance]()</h3>\n\t\t<div>\n\t\tReturns the length of the line segment.\n\t\t</div>\n\t\tReturns true if both line's start and end points are equal."
+          "!doc": "<h3>[method:Float distance]()</h3>\n\t\t<div>\n\t\tReturns the length of the line segment.\n\t\t</div>\n\t\tReturns true if both line's animationStart and end points are equal."
         },
         "distance": {
           "!type": "fn() -> number",
@@ -3345,7 +3345,7 @@
         },
         "at": {
           "!type": "fn(t: number, optionalTarget: +THREE.Vector3) -> Vector",
-          "!doc": "Return a vector at a certain position along the line. When t = 0, it returns the start vector, and when t=1 it returns the end vector."
+          "!doc": "Return a vector at a certain position along the line. When t = 0, it returns the animationStart vector, and when t=1 it returns the end vector."
         },
         "center": {
           "!type": "fn(optionalTarget: +THREE.Vector3) -> +THREE.Vector3",
@@ -3353,7 +3353,7 @@
         },
         "delta": {
           "!type": "fn(optionalTarget: +THREE.Vector3) -> +THREE.Vector3",
-          "!doc": "Returns the delta vector of the line segment, or the end vector minus the start vector."
+          "!doc": "Returns the delta vector of the line segment, or the end vector minus the animationStart vector."
         },
         "closestPointToPoint": {
           "!type": "fn(point: +THREE.Vector3, clampToLine: bool, optionalTarget: +THREE.Vector3) -> +THREE.Vector3",
@@ -3364,8 +3364,8 @@
           "!doc": "Returns a point parameter based on the closest point as projected on the line segement. If clamp to line is true, then the returned value will be between 0 and 1."
         }
       },
-      "!doc": "A geometric line segment represented by a start and end point.",
-      "!type": "fn(start: +THREE.Vector3, end: +THREE.Vector3)"
+      "!doc": "A geometric line segment represented by a animationStart and end point.",
+      "!type": "fn(animationStart: +THREE.Vector3, end: +THREE.Vector3)"
     },
     "Math": {
       "!url": "http://threejs.org/docs/#Reference/math/Math",
@@ -4697,7 +4697,7 @@
           "!doc": "todo"
         },
         "setFrameRange": {
-          "!type": "fn(start: todo, end: todo) -> todo",
+          "!type": "fn(animationStart: todo, end: todo) -> todo",
           "!doc": "todo"
         },
         "setDirectionBackward": {
@@ -4713,7 +4713,7 @@
           "!doc": "todo"
         },
         "setAnimationLabel": {
-          "!type": "fn(label: todo, start: todo, end: todo) -> todo",
+          "!type": "fn(label: todo, animationStart: todo, end: todo) -> todo",
           "!doc": "todo"
         }
       },
@@ -5361,7 +5361,7 @@
         },
         "unpackAlignment": {
           "!type": "number",
-          "!doc": "4 by default. Specifies the alignment requirements for the start of each pixel row in memory. The allowable values are 1 (byte-alignment), 2 (rows aligned to even-numbered bytes), 4 (word-alignment), and 8 (rows start on double-word boundaries). See <a href=\"http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml\">glPixelStorei</a> for more information."
+          "!doc": "4 by default. Specifies the alignment requirements for the animationStart of each pixel row in memory. The allowable values are 1 (byte-alignment), 2 (rows aligned to even-numbered bytes), 4 (word-alignment), and 8 (rows animationStart on double-word boundaries). See <a href=\"http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml\">glPixelStorei</a> for more information."
         },
         "premultiplyAlpha": {
           "!type": "boolean",

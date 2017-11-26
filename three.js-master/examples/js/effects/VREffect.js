@@ -477,7 +477,7 @@ THREE.VREffect = function ( renderer, onError ) {
 
 		var handednessScale = rightHanded ? - 1.0 : 1.0;
 
-		// start with an identity matrix
+		// animationStart with an identity matrix
 		var mobj = new THREE.Matrix4();
 		var m = mobj.elements;
 

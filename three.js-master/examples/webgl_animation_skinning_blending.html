@@ -158,7 +158,7 @@
 				activateAllActions();
 
 
-				// Listen on window resizing and start the render loop
+				// Listen on window resizing and animationStart the render loop
 
 				window.addEventListener( 'resize', onWindowResize, false );
 				animate();
@@ -415,8 +415,8 @@
 
 			function executeCrossFade( startAction, endAction, duration ) {
 
-				// Not only the start action, but also the end action must get a weight of 1 before fading
-				// (concerning the start action this is already guaranteed in this place)
+				// Not only the animationStart action, but also the animationEnd action must get a weight of 1 before fading
+				// (concerning the animationStart action this is already guaranteed in this place)
 
 				setWeight( endAction, 1 );
 				endAction.time = 0;
@@ -428,8 +428,8 @@
 			}
 
 
-			// This function is needed, since animationAction.crossFadeTo() disables its start action and sets
-			// the start action's timeScale to ((start animation's duration) / (end animation's duration))
+			// This function is needed, since animationAction.crossFadeTo() disables its animationStart action and sets
+			// the animationStart action's timeScale to ((animationStart animation's duration) / (animationEnd animation's duration))
 
 			function setWeight( action, weight ) {
 

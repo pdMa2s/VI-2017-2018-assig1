@@ -16,7 +16,7 @@ else:
     CAN_GUI = True
 
 range_regexp = re.compile(r'^([\w\d]+)\=([\d]+)\.\.([\d]+)$')
-Range = namedtuple('Range', ('name', 'start', 'end'))
+Range = namedtuple('Range', ('name', 'animationStart', 'animationEnd'))
 
 
 def parse_range(value):

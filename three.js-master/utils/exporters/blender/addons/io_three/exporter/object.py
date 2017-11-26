@@ -92,7 +92,7 @@ class Object(base_classes.BaseNode):
             logger.info("Parsing materials for %s", self.node)
 
 
-            material_names = api.object.material(self.node) #manthrax: changes for multimaterial start here
+            material_names = api.object.material(self.node) #manthrax: changes for multimaterial animationStart here
             if material_names:
 
                 logger.info("Got material names for this object:%s",str(material_names));

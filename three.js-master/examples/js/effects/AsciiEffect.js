@@ -278,6 +278,6 @@ THREE.AsciiEffect = function ( renderer, charSet, options ) {
 
 	}
 
-	// end modified asciifyImage block
+	// animationEnd modified asciifyImage block
 
 };

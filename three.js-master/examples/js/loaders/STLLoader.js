@@ -312,7 +312,7 @@ THREE.STLLoader.prototype = {
 
 		}
 
-		// start
+		// animationStart
 
 		var binData = ensureBinary( data );
 

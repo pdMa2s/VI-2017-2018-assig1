@@ -627,7 +627,7 @@ THREE.OrthographicTrackballControls = function ( object, domElement ) {
 
 	this.handleResize();
 
-	// force an update at start
+	// force an update at animationStart
 	this.update();
 
 };

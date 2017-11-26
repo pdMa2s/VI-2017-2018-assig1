@@ -476,7 +476,7 @@
   function invalidDoc(doc) {
     if (doc.query) {
       if (typeof doc.query.type != "string") return ".query.type must be a string";
-      if (doc.query.start && !isPosition(doc.query.start)) return ".query.start must be a position";
+      if (doc.query.start && !isPosition(doc.query.start)) return ".query.animationStart must be a position";
       if (doc.query.end && !isPosition(doc.query.end)) return ".query.end must be a position";
     }
     if (doc.files) {

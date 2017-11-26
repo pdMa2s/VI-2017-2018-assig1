@@ -46,7 +46,7 @@ Sidebar.Geometry.SphereGeometry = function ( editor, object ) {
 	var phiStartRow = new UI.Row();
 	var phiStart = new UI.Number( parameters.phiStart ).onChange( update );
 
-	phiStartRow.add( new UI.Text( 'Phi start' ).setWidth( '90px' ) );
+	phiStartRow.add( new UI.Text( 'Phi animationStart' ).setWidth( '90px' ) );
 	phiStartRow.add( phiStart );
 
 	container.add( phiStartRow );
@@ -66,7 +66,7 @@ Sidebar.Geometry.SphereGeometry = function ( editor, object ) {
 	var thetaStartRow = new UI.Row();
 	var thetaStart = new UI.Number( parameters.thetaStart ).onChange( update );
 
-	thetaStartRow.add( new UI.Text( 'Theta start' ).setWidth( '90px' ) );
+	thetaStartRow.add( new UI.Text( 'Theta animationStart' ).setWidth( '90px' ) );
 	thetaStartRow.add( thetaStart );
 
 	container.add( thetaStartRow );

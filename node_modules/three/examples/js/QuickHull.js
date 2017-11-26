@@ -632,7 +632,7 @@
 
 				var eyeVertex, maxDistance = 0;
 
-				// grap the first available face and start with the first visible vertex of that face
+				// grap the first available face and animationStart with the first visible vertex of that face
 
 				var eyeFace = this.assigned.first().face;
 				var vertex = eyeFace.outside;
@@ -680,7 +680,7 @@
 
 			} else {
 
-				// start from the next edge since 'crossEdge' was already analyzed
+				// animationStart from the next edge since 'crossEdge' was already analyzed
 				// (actually 'crossEdge.twin' was the edge who called this method recursively)
 
 				edge = crossEdge.next;

@@ -1264,7 +1264,7 @@ SEA3D.Actions = function ( name, data, sea3d ) {
 		// range of animation
 		if ( flag & 1 ) {
 
-			// start and count in frames
+			// animationStart and count in frames
 			act.range = [ data.readUInt(), data.readUInt() ];
 
 		}

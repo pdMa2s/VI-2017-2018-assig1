@@ -190,7 +190,7 @@ function CylinderBufferGeometry( radiusTop, radiusBottom, height, radialSegments
 
 		scope.addGroup( groupStart, groupCount, 0 );
 
-		// calculate new start value for groups
+		// calculate new animationStart value for groups
 
 		groupStart += groupCount;
 
@@ -301,7 +301,7 @@ function CylinderBufferGeometry( radiusTop, radiusBottom, height, radialSegments
 
 		scope.addGroup( groupStart, groupCount, top === true ? 1 : 2 );
 
-		// calculate new start value for groups
+		// calculate new animationStart value for groups
 
 		groupStart += groupCount;
 

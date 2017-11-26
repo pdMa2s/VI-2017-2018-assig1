@@ -147,7 +147,7 @@ THREE.ShadowMapViewer = function ( light ) {
 
 			//Because a light's .shadowMap is only initialised after the first render pass
 			//we have to make sure the correct map is sent into the shader, otherwise we
-			//always end up with the scene's first added shadow casting light's shadowMap
+			//always animationEnd up with the scene's first added shadow casting light's shadowMap
 			//in the shader
 			//See: https://github.com/mrdoob/three.js/issues/5932
 			uniforms.tDiffuse.value = light.shadow.map.texture;

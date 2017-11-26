@@ -26,7 +26,7 @@ Sidebar.Geometry.LatheGeometry = function( editor, object ) {
 	var phiStartRow = new UI.Row();
 	var phiStart = new UI.Number( parameters.phiStart * 180 / Math.PI ).onChange( update );
 
-	phiStartRow.add( new UI.Text( 'Phi start (°)' ).setWidth( '90px' ) );
+	phiStartRow.add( new UI.Text( 'Phi animationStart (°)' ).setWidth( '90px' ) );
 	phiStartRow.add( phiStart );
 
 	container.add( phiStartRow );

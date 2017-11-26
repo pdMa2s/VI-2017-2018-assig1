@@ -14791,7 +14791,7 @@
 
 			scope.addGroup( groupStart, groupCount, materialIndex );
 
-			// calculate new start value for groups
+			// calculate new animationStart value for groups
 
 			groupStart += groupCount;
 
@@ -28763,7 +28763,7 @@
 
 			scope.addGroup( groupStart, groupCount, 0 );
 
-			// calculate new start value for groups
+			// calculate new animationStart value for groups
 
 			groupStart += groupCount;
 
@@ -28874,7 +28874,7 @@
 
 			scope.addGroup( groupStart, groupCount, top === true ? 1 : 2 );
 
-			// calculate new start value for groups
+			// calculate new animationStart value for groups
 
 			groupStart += groupCount;
 
@@ -31349,7 +31349,7 @@
 
 								if ( t0 === undefined ) {
 
-									// before start
+									// before animationStart
 
 									this._cachedIndex = 0;
 									return this.beforeStart_( 0, t, t1 );
@@ -31860,7 +31860,7 @@
 		},
 
 		// removes keyframes before and after animation without changing any values within the range [startTime, endTime].
-		// IMPORTANT: We do not shift around keys to the start of the track time, because for interpolated keys this will change their values
+		// IMPORTANT: We do not shift around keys to the animationStart of the track time, because for interpolated keys this will change their values
 		trim: function ( startTime, endTime ) {
 
 			var times = this.times,
@@ -35272,7 +35272,7 @@
 
 		closePath: function () {
 
-			// Add a line curve if start and end of lines are not connected
+			// Add a line curve if animationStart and end of lines are not connected
 			var startPoint = this.curves[ 0 ].getPoint( 0 );
 			var endPoint = this.curves[ this.curves.length - 1 ].getPoint( 1 );
 
@@ -38500,7 +38500,7 @@
 		this._loopCount = -1;
 
 		// global mixer time when the action is to be started
-		// it's set back to 'null' upon start of the action
+		// it's set back to 'null' upon animationStart of the action
 		this._startTime = null;
 
 		// scaled local time of the action
@@ -38521,7 +38521,7 @@
 		this.clampWhenFinished 	= false;	// keep feeding the last frame?
 
 		this.zeroSlopeAtStart 	= true;		// for smooth interpolation w/o separate
-		this.zeroSlopeAtEnd		= true;		// clips for start, loop and end
+		this.zeroSlopeAtEnd		= true;		// clips for animationStart, loop and end
 
 	}
 
@@ -38792,7 +38792,7 @@
 
 			if ( startTime !== null ) {
 
-				// check for scheduled start of action
+				// check for scheduled animationStart of action
 
 				var timeRunning = ( time - startTime ) * timeDirection;
 				if ( timeRunning < 0 || timeDirection === 0 ) {
@@ -38801,7 +38801,7 @@
 
 				}
 
-				// start
+				// animationStart
 
 				this._startTime = null; // unschedule
 				deltaTime = timeDirection * timeRunning;

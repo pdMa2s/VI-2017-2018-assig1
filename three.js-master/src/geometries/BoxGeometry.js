@@ -180,7 +180,7 @@ function BoxBufferGeometry( width, height, depth, widthSegments, heightSegments,
 
 		scope.addGroup( groupStart, groupCount, materialIndex );
 
-		// calculate new start value for groups
+		// calculate new animationStart value for groups
 
 		groupStart += groupCount;
 
