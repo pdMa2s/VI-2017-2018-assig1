@@ -4,7 +4,6 @@ var timeLineMax = 0;
 var rX = 0;
 var rY = 0;
 var rZ = 0;
-
 var rotatedX = 0;
 var rotatedY = 0;
 var rotatedZ = 0;
@@ -13,25 +12,51 @@ function createRotation() {
     if (animationEnd > timeLineMax) {
         timeLineMax = animationEnd;
     }
-    var animation = new Animation(animationStart, animationEnd);
+    var animation = new Animation(selected_object,animationStart, animationEnd);
     animation.rotation(rX, rY, rZ);
     objCollection.addAnimation(selected_object.name, animation);
+
 }
 
-function rotateObject(obj, prevTime, animationTime) {
+function play(prevTime,animation) {
+    var animationType = animation.getType();
+    var animationObj = animation.getObj();
+
+    switch(animationType){
+        case "rotation":
+            return rotateObject(animationObj, prevTime, animation);
+        case "translation":
+            return true;
+        default:
+            alert("Invalid animation");
+    }
+
+
+    return true;
+
+}
+
+function rotateObject(obj, prevTime, animation) {
+    var animationTime = animation.getEndTime();
+
     var date = new Date();
     var now = date.getTime();
-    var fps = animationTime * 50;
+    var fps = animationTime * 20;
     var animationMillis = animationTime * 1000;
     if ((now - prevTime) <= animationMillis || rotated((rX / fps), (rY / fps), (rZ / fps))) {
-        obj.rotation.x += (rX / fps);
-        obj.rotation.y += (rY / fps);
-        obj.rotation.z += (rZ / fps);
+        var axis = animation.getRotationAxis();
+        obj.rotation.x += (axis.x / fps);
+        obj.rotation.y += (axis.y / fps);
+        obj.rotation.z += (axis.z / fps);
+
+        return false;
     }
     else {
+
         rotatedX = 0;
         rotatedY = 0;
         rotatedZ = 0;
+        return true;
     }
 
 }
@@ -147,3 +172,6 @@ function generateTrajectoryLine() {
 }
 
 
+function sortAnimations(){
+
+}

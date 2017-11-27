@@ -1,43 +1,87 @@
 class ObjectCollection {
-  constructor() {
-    this.objs = [];
-    this.json = {"sceneObjects": []};
-  }
+    constructor() {
+        this.objs = [];
+        this.json = {"sceneObjects": []};
+        this.sortedAnimations = [];
+    }
 
-  get getJson(){
-    return this.json;
-  }
+    getJson() {
+        return this.json;
+    }
+    getObjs(){
+        return this.objs;
+    }
 
-  addSceneObject(obj){
-    this.objs.push(obj);
-  }
+    addSceneObject(obj) {
+        this.json.sceneObjects.push(obj.getJson());
+        this.objs.push(obj);
+    }
 
-  getObject(name){
-      for(var i = 0; i < this.objs.length; i++){
-          if( this.objs[i].getName() === name){
-              return this.objs[i];
-          }
-      }
-      return null;
-  }
+    getObject(name) {
+        for (var i = 0; i < this.objs.length; i++) {
+            if (this.objs[i].getName() === name) {
+                return this.objs[i];
+            }
+        }
+        return null;
+    }
 
-  setPosition(name, pos){
-      for(var i = 0; i < this.objs.length; i++){
-          if( this.objs[i].getName() === name){
-              this.objs[i].setPosition(pos);
-              return true;
-          }
-      }
-      return false;
-  }
+    setPosition(name, pos) {
+        for (var i = 0; i < this.objs.length; i++) {
+            if (this.objs[i].getName() === name) {
+                this.objs[i].setPosition(pos);
+                return true;
+            }
+        }
+        return false;
+    }
 
-  addAnimation(name, animation){
-      for(var i = 0; i < this.objs.length; i++){
-          if( this.objs[i].getName() === name){
-              this.objs[i].addAnimation(animation);
-              return true;
-          }
-      }
-      return false;
-  }
+    addAnimation(name, animation) {
+        for (var i = 0; i < this.objs.length; i++) {
+            if (this.objs[i].getName() === name) {
+                this.objs[i].addAnimation(animation);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    getSortedAnimations() {
+        this.sortedAnimations = this.getAnimationArray();
+
+        let nrAnimations = this.sortedAnimations.length;
+        let k;
+        for (let i = nrAnimations; i >= 0; i--) {
+            for (let j = 0; j < nrAnimations - 1; j++) {
+                k = j + 1;
+                if (this.sortedAnimations[j].getStart() > this.sortedAnimations[k].getStart()) {
+                    this.swapNumbers(j, k, this.sortedAnimations);
+                }
+            }
+        }
+
+        return this.sortedAnimations;
+    }
+
+    swapNumbers(i, j, array) {
+        var temp;
+        temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+
+    getAnimationArray() {
+        var animations = [];
+        for (var i = 0; i < this.objs.length; i++) {
+            var objAnimations = this.objs[i].getAnimations();
+            for (var j = 0; j < objAnimations.length; j++) {
+                animations.push(objAnimations[j]);
+            }
+        }
+
+        return animations;
+    }
 }
+
+
+

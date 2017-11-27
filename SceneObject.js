@@ -40,6 +40,9 @@ class SceneObject {
         this.animations.push(animation);
     }
 
+    getAnimations(){
+        return this.animations;
+    }
     hasTrajectoryAnimation() {
         for (var i = 0; i < this.animations.length; i++) {
             if (this.animations[i].type === "trajectory") {

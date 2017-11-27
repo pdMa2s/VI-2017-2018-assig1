@@ -30,6 +30,8 @@
 <script src="Animation.js"></script>
 <script src="createObjectAnimation.js"></script>
 <script src="Animator.js"></script>
+<script src="AnimationPlayer.js"></script>
+
 
 <script>
     var stats, camera, scene, projector, renderer, controls;
@@ -136,7 +138,6 @@
         stats = new Stats();
         container.appendChild(stats.dom);
 
-        /*
 
         // FLOOR
         var floorGeometry = new THREE.PlaneGeometry(9000, 9000, 100, 100);
@@ -160,7 +161,6 @@
         floor.name = 'floor';
         selected_object = floor;
         scene.add(floor);
-        */
 
         createPanel();
     }
@@ -258,27 +258,6 @@
         //folder4.open();
     }
 
-    function StartAnimation() {
-        if (initAnim) {
-            initAnim = false;
-            runAnim = true;
-            theta = 0;
-        }
-
-        // Start and Pause
-        if (runAnim) {
-            runAnim = false;
-            isPlay = true;
-            theta = 0.1;
-        }
-
-        else {
-            runAnim = true;
-            isPlay = false;
-            theta = 0;
-        }
-    }
-
     //mouse event variables
     projector = new THREE.Projector();
     mouse_vector = new THREE.Vector3();
@@ -341,8 +320,7 @@
     var timeBeforeAnimation = 0;
 
     function updateTimeBefore() {
-        if (!isPlay)
-            timeBeforeAnimation = Date.now();
+        timeBeforeAnimation = Date.now();
     }
 
     var prevTime = Date.now();
@@ -355,6 +333,7 @@
     function render() {
         secondsPassed = clock.getElapsedTime();
         var object = selected_object;
+
         if (isPlay) {
             playAnimations();
         }
@@ -396,11 +375,59 @@
             // 3 segundos - 180 incrementos  t = [0,1]  1 / 180 = 0.005555555555555556
         }
         */
-    renderer.render(scene, camera);
-    //controls.update();
+        renderer.render(scene, camera);
+        //controls.update();
     }
 
+    var sortedAnimations = [];
+    var animationWorkers = [];
+
+    function StartAnimation() {
+        if (initAnim) {
+            initAnim = false;
+            runAnim = true;
+            theta = 0;
+        }
+
+        // Start and Pause
+        if (runAnim) {
+            runAnim = false;
+            isPlay = true;
+            theta = 0.1;
+            sortedAnimations = objCollection.getSortedAnimations();
+            updateTimeBefore();
+        }
+
+        else {
+            runAnim = true;
+            isPlay = false;
+            theta = 0;
+            for (let i = 0; i < animationWorkers.length; i++) {
+                animationWorkers[i].terminate();
+            }
+            animationWorkers = [];
+        }
+    }
+
+    var nextAnimation = 0;
+    var animationToPlay;
+
     function playAnimations() {
+
+        if (nextAnimation < sortedAnimations.length) {
+            animationToPlay = sortedAnimations[nextAnimation];
+            if (play(timeBeforeAnimation, animationToPlay)) {
+                nextAnimation++;
+                updateTimeBefore();
+            }
+
+        }
+        //alert("launch worker");
+        //let w = new Worker("AnimationPlayer.js");
+        //w.postMessage(animationToPlay);
+        //animationWorkers.push();
+
+
         if (mixers.length > 0) {
 
             var time = Date.now();
