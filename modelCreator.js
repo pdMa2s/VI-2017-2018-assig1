@@ -10,7 +10,7 @@ var geometry = new THREE.BoxGeometry(75, 75, 75).clone();
 var material = new THREE.MeshBasicMaterial({map: texture });
 var mesh = new THREE.Mesh(geometry, material);
 
-mesh.position.y = 0.5;
+mesh.position.y = 5;
 
 var exporter = new THREE.OBJExporter();
 var result = exporter.parse(mesh);

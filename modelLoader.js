@@ -10,18 +10,16 @@ function addObj(name, scale, url, texture, pos) {
     obj.setTexture(texture);
     objCollection.addSceneObject(obj);
 }
-function addJsonModel(model) {
-    var name;
-    var url = "three.js-master/examples/models/animated/";
+function addJsonModel(model, name) {
     var loader = new THREE.JSONLoader();
-    loader.load(url + model + ".js", function (geometry) {
+    loader.load( model, function (geometry) {
         mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
             vertexColors: THREE.FaceColors,
             morphTargets: true,
         }));
-        url += model + ".js";
+
         mesh.scale.set(scale, scale, scale);
-        name = model + '_' + count;
+        name = name + '_' + count;
         mesh.name = name;
         objects.push(mesh);
         scene.add(mesh);
@@ -29,7 +27,7 @@ function addJsonModel(model) {
         var clip = THREE.AnimationClip.CreateFromMorphTargetSequence('move', geometry.morphTargets, 30);
         mixers[mixers.length - 1].clipAction(clip).setDuration(1).play();
         count++;
-        addObj(name, scale, url, "", mesh.position);
+        addObj(name, scale, model, "", mesh.position);
     });
 
 }
@@ -38,7 +36,7 @@ function setScale(newScale) {
 
 }
 
-/*function addObjModel(model, material = null){
+function addObjModel(model, material = null){
   var loader = new THREE.OBJLoader();
 
   loader.load(
@@ -50,9 +48,17 @@ function setScale(newScale) {
       function ( obj ) {
       //add the loaded object to the scene
           if(material != null){
-            obj = applyMaterial(obj, material)
+              obj = applyMaterial(obj, material)
           }
+
+          let fileName = model.split(".");
+          let name = fileName[0] +"_"+ count;
+          obj.name = name;
+          obj.position.y = 35;
           scene.add( obj );
+          objects.push(obj);
+          addObj(name, scale, model, "", obj.position);
+          count++;
       },
 
       // Function called when download progresses
@@ -62,13 +68,14 @@ function setScale(newScale) {
 
       // Function called when download errors
       function ( xhr ) {
-          alert( 'Error laoding object' );
+          //alert( 'Error laoding object' );
+          addJsonModel(model);
       }
 
 
   );
 
-}*/
+}
 
 function addVeyron() {
     addCar("veyron");
@@ -136,19 +143,19 @@ function addEarth() {
 }
 
 function addHorse() {
-    addJsonModel("horse");
+    addJsonModel("three.js-master/examples/models/animated/horse.js","horse");
 }
 
-function addFlaming() {
-    addJsonModel("flamingo");
+function addFlamingo() {
+    addJsonModel("three.js-master/examples/models/animated/flamingo.js","flamingo");
 }
 
 function addParrot() {
-    addJsonModel("parrot");
+    addJsonModel("three.js-master/examples/models/animated/parrot.js", "parrot");
 }
 
 function addStork() {
-    addJsonModel("stork");
+    addJsonModel("three.js-master/examples/models/animated/stork.js","stork");
 }
 
 function createCar(geometry, url,car) {

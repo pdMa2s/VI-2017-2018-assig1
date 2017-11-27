@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>three.js webgl - morph targets - horse</title>
+    <title>Three Animator </title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <style>
@@ -30,7 +30,6 @@
 <script src="Animation.js"></script>
 <script src="createObjectAnimation.js"></script>
 <script src="Animator.js"></script>
-<script src="AnimationPlayer.js"></script>
 
 
 <script>
@@ -176,11 +175,12 @@
     function createPanel() {
         var panel = new dat.GUI({width: 270});
         var folder1 = panel.addFolder('Add model');
+        var folder5 = panel.addFolder('Import models');
         var folder2 = panel.addFolder('Animation');
 
         settings = {
             'horse': addHorse,
-            'flamingo': addFlaming,
+            'flamingo': addFlamingo,
             'parrot': addParrot,
             'stork': addStork,
             'box': addBox,
@@ -189,7 +189,6 @@
             'camaro': addCamaro,
             'gallardo': addGallardo,
             'f50': addF50,
-            'import model': "",
             'wireframe': false,
             'start/pause': StartAnimation,
             'create/save trajectory': createTrajectory,
@@ -201,7 +200,9 @@
             'scale': 0.5,
             'startTime': 0,
             'endTime': 0,
-            'add Rotation': createRotation
+            'add Rotation': createRotation,
+            'import obj': "",
+            'import json': ""
         };
 
         folder1.add(settings, 'horse');
@@ -219,7 +220,19 @@
             setScale(value)
         });
         //folder1.add( settings,  'import model').onChange(function(value){addUserModel(value)});
-        folder1.open();
+
+
+        folder5.add(settings, 'import json').onChange(function (value) {
+            addJsonModel(value, "Jmodel");
+
+
+        });
+        folder5.add(settings, 'import obj').onChange(function (value) {
+            addObjModel(value);
+        });
+
+
+        //folder1.open();
         var step = 0.0001;
         folder2.add(settings, 'start/pause');
         folder2.add(settings, 'startTime').name('Start time').onChange(function (value) {
