@@ -16,7 +16,11 @@ class ObjectCollection {
         this.json.sceneObjects.push(obj.getJson());
         this.objs.push(obj);
     }
-
+    removeSceneObject(obj){
+        var index =  this.objs.indexOf(obj);
+        if(index > -1)
+            this.objs.splice(index, 1);
+    }
     getObject(name) {
         for (var i = 0; i < this.objs.length; i++) {
             if (this.objs[i].getName() === name) {

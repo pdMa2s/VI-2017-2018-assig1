@@ -13,6 +13,12 @@ function addAnimatorAnis(anim) {
     animatorAnims.push(anim);
 }
 
+function removeAmin(obj) {
+    for(let i = 0; i< animatorAnims.length; i++){
+        if(animatorAnims[i].getObj().name === obj.name)
+            animatorAnims.splice(i,1);
+    }
+}
 function createRotation() {
 
     var animation = new Animation(selected_object,animationDuration);

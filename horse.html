@@ -228,9 +228,10 @@
             'scale': 0.5,
             'duration' : 1,
             'add Rotation': createRotation,
-            'import obj': "",
+            'import .obj': "",
             'import json': "",
-            'show obj animations': displayObjectAnimations
+            'show obj animations': displayObjectAnimations,
+            'remove model' : removeModel
         };
 
         folder1.add(settings, 'horse');
@@ -255,7 +256,7 @@
 
 
         });
-        folder5.add(settings, 'import obj').onChange(function (value) {
+        folder5.add(settings, 'import .obj').onChange(function (value) {
             addObjModel(value);
         });
 
@@ -284,7 +285,9 @@
         folder3.add(settings, 'wireframe').onChange(function (value) {
             selected_object.material.wireframe = value;
         });
-
+        folder3.add(settings, 'remove model').onChange(function (value) {
+            removeModel(selected_object);
+        });
         folder3.add(settings, 'show obj animations').name('show selected object animations');
         //folder3.open();
 
@@ -465,6 +468,10 @@
         }
         document.getElementById('animations').innerHTML= text + "</ul>";
 
+    }
+    function removeModel(obj) {
+        removeObj(obj);
+        removeAmin(obj)
     }
 
 </script>
