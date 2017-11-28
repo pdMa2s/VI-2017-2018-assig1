@@ -7,6 +7,9 @@ var rZ = 0;
 var rotatedX = 0;
 var rotatedY = 0;
 var rotatedZ = 0;
+var t = 0;
+var fps = 60;
+
 
 function createRotation() {
     if (animationEnd > timeLineMax) {
@@ -18,23 +21,60 @@ function createRotation() {
 
 }
 
-function play(prevTime,animation) {
+function play(prevTime, animation) {
     var animationType = animation.getType();
     var animationObj = animation.getObj();
 
     switch(animationType){
         case "rotation":
             return rotateObject(animationObj, prevTime, animation);
-        case "translation":
-            return true;
+        case "trajectory":
+            return translateObject(animationObj, animation);
         default:
             alert("Invalid animation");
     }
-
-
     return true;
-
 }
+
+var up = new THREE.Vector3(0, 1, 0);
+var axis = new THREE.Vector3();
+var pt, radians, axis, tangent;
+
+function translateObject(obj, animation) {
+    var duration = animation.end - animation.start;
+    if (t < 1) {
+
+        var spline = animation.json.animation.line;
+
+        // set the marker position
+        //object.position.copy(spline.getPointAt(t));
+        pt = spline.getPointAt(t);
+        obj.position.set(pt.x, pt.y, pt.z);
+
+        // get the tangent to the curve
+        //tangent = spline.getTangent(t).normalize();
+
+        // calculate the axis to rotate around
+        //axis.crossVectors(up, tangent).normalize();
+
+        // calcluate the angle between the up vector and the tangent
+        //radians = Math.acos(up.dot(tangent));
+
+        // set the quaternion
+        //obj.quaternion.setFromAxisAngle(axis, radians);
+        t += 1 / (duration * fps);
+
+        // 60fps -> 60 incrementos - 1 segundo
+        // 3 segundos - 180 incrementos  t = [0,1]  1 / 180 = 0.005555555555555556
+        return false;
+    }
+
+    else {
+        t = 0;
+        return true;
+    }
+}
+
 
 function rotateObject(obj, prevTime, animation) {
     var animationTime = animation.getEndTime();
@@ -69,9 +109,9 @@ function rotated(rXFps, rYFps, rZFps) {
     return (rotatedX <= rX * 0.85) && (rotatedY <= rY * 0.85) && (rotatedZ <= rZ * 0.85);
 }
 
+
 var numPoints = 100; // line trajectory points
 var creatingTrajectory = false;
-var fps = 60;
 var trajectoryColors = [new THREE.Color(0xe6194b), new THREE.Color(0x3cb44b), new THREE.Color(0xffe119),
 new THREE.Color(0x0082c8), new THREE.Color(0xf58231)];
 
@@ -79,19 +119,20 @@ new THREE.Color(0x0082c8), new THREE.Color(0xf58231)];
 var trajPositions = [];
 
 function createTrajectory() {
+    var insuficient_points = false;
     creatingTrajectory = !creatingTrajectory;
 
     if (creatingTrajectory === false) {
 
-        if (trajPositions.length <= 1) {
-            creatingTrajectory = true;
+        if (trajPositions.length < 1) {
+            insuficient_points = true;
             alert("Must define at least one trajectory point");
         }
 
         else {
             var line = generateTrajectoryLine();
 
-            var animation = new Animation(animationStart, animationEnd);
+            var animation = new Animation(selected_object, animationStart, animationEnd);
             animation.trajectory(trajPositions, line);
             objCollection.addAnimation(selected_object.name, animation);
 
@@ -111,6 +152,10 @@ function createTrajectory() {
         }
 
     }
+
+    if (insuficient_points) {
+        creatingTrajectory = true;
+    }
 }
 
 
@@ -123,8 +168,8 @@ function generateTrajectoryLine() {
         for (var i = obj.animations.length - 1; i >= 0; i--) {
             var anim = obj.animations[i];
             if (anim.type === "trajectory") {
-                var anteriorPositionsSize = anim.json.animation.trajectory.pos.length - 1;
-                points.push(anim.json.animation.trajectory.pos[anteriorPositionsSize]);
+                var anteriorPositionsSize = anim.json.animation.pos.length - 1;
+                points.push(anim.json.animation.pos[anteriorPositionsSize]);
                 break;
             }
         }
@@ -168,10 +213,9 @@ function generateTrajectoryLine() {
     }
 
     scene.add(line);
-    return line;
+    return spline;
 }
 
-
-function sortAnimations(){
+function sortAnimations() {
 
 }

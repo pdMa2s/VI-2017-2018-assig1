@@ -4,18 +4,47 @@
     <title>Three Animator </title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
     <style>
         body {
-            font-family: Monospace;
+            font-family: 'Lato', sans-serif;
+            font-weight: 400;
             text-align: center;
             background-color: #f0f0f0;
             margin: 0px;
             overflow: hidden;
         }
+
+        #container {
+            width: 77%;
+            height: 100%;
+            float: left;
+        }
+
+        #interface {
+            width: 23%;
+            height: 60%;
+            float: right;
+            margin-right: 0px;
+        }
+
+        #animations {
+            width: 23%;
+            height: 100px;
+            float: right;
+            text-align: left;
+        }
+
+        .full_width {
+            width: 100% !important;
+        }
+
     </style>
 </head>
 <body>
 <div id="container"></div>
+<div id="interface"></div>
+<div id="animations"></div>
 <script src="three.js-master/build/three.js"></script>
 <script src="three.js-master/examples/js/libs/stats.min.js"></script>
 <script src="three.js-master/examples/js/controls/DragControls.js"></script>
@@ -31,11 +60,10 @@
 <script src="createObjectAnimation.js"></script>
 <script src="Animator.js"></script>
 
-
 <script>
+    var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
     var stats, camera, scene, projector, renderer, controls;
-    var mesh, selected_object, settings;
-    var vectors = [];
+    var selected_object, settings;
     var sphereMaterial = new THREE.MeshBasicMaterial({color: 0xff0000});
     var clock = new THREE.Clock();
     var secondsPassed;
@@ -57,8 +85,8 @@
         scene.background = new THREE.Color(0xffffff);
 
         // CAMERA
-        var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
-        var VIEW_ANGLE = 50, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 1, FAR = 10000;
+
+        var VIEW_ANGLE = 50, ASPECT = (SCREEN_WIDTH * 0.77) / SCREEN_HEIGHT, NEAR = 1, FAR = 10000;
         camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
         scene.add(camera);
         camera.position.set(0, 250, 800);
@@ -67,7 +95,7 @@
 
         // RENDERER
         renderer = new THREE.WebGLRenderer({antialias: true});
-        renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+        renderer.setSize(SCREEN_WIDTH * 0.77, SCREEN_HEIGHT);
         container.appendChild(renderer.domElement);
 
         //CONTROLS
@@ -165,18 +193,18 @@
     }
 
     function onWindowResize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.aspect = (window.innerWidth*0.77) / window.innerHeight;
         camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(window.innerWidth*0.77, window.innerHeight);
     }
 
     window.addEventListener('resize', onWindowResize, false);
 
     function createPanel() {
-        var panel = new dat.GUI({width: 270});
+        var panel = new dat.GUI({width: SCREEN_WIDTH *  0.20});
         var folder1 = panel.addFolder('Add model');
         var folder5 = panel.addFolder('Import models');
-        var folder2 = panel.addFolder('Animation');
+        var folder2 = panel.addFolder('Animations');
 
         settings = {
             'horse': addHorse,
@@ -201,7 +229,8 @@
             'duration' : 1,
             'add Rotation': createRotation,
             'import obj': "",
-            'import json': ""
+            'import json': "",
+            'show obj animations': displayObjectAnimations
         };
 
         folder1.add(settings, 'horse');
@@ -240,7 +269,7 @@
         folder2.add(settings, 'endTime').name('End time').onChange(function (value) {
             animationEnd = value;
         });
-        folder2.add(settings, 'create/save trajectory');
+        folder2.add(settings, 'create/save trajectory').name('create/save trajectory');
         folder2.add(settings, 'rotation_x').min(-1).max(1).step(step).name('Rotation X axis').onChange(function (value) {
             rX = value;
         });
@@ -259,6 +288,7 @@
             selected_object.material.wireframe = value;
         });
 
+        folder3.add(settings, 'show obj animations').name('show selected object animations');
         //folder3.open();
 
         var folder4 = panel.addFolder('Create object');
@@ -268,6 +298,14 @@
 
         folder4.add(settings, 'geometry', ['Cube', 'Sphere', 'Torus']).onChange(render);
         //folder4.open();
+
+        console.log(panel.__folders['Animations']);
+        panel.__folders['Animations'].__ul.childNodes[4].childNodes[0].childNodes[0].classList += ' full_width';
+        panel.__folders['Animations'].__ul.childNodes[8].childNodes[0].childNodes[0].classList += ' full_width';
+        panel.__folders['Selected object settings'].__ul.childNodes[3].childNodes[0].childNodes[0].classList += ' full_width';
+
+        var interfaceDiv = document.getElementById('interface');
+        interfaceDiv.appendChild(panel.domElement);
     }
 
     //mouse event variables
@@ -286,7 +324,7 @@
 
                 if (!creatingTrajectory) {
                     //Começa a tranformação entre coordenadas do rato e three.js
-                    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+                    mouse.x = (e.clientX / (window.innerWidth * 0.77)) * 2 - 1;
                     mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
                     //Vector 3D que indica a direção do vetor a partir do pixel
                     mouse_vector.set(mouse.x, mouse.y, mouse.z);
@@ -298,7 +336,7 @@
 
                     //Verifica se o raio intersetou algum objeto na cena
                     intersects = ray.intersectObjects(scene.children);
-                    if (intersects[0].object.material !== sphereMaterial && intersects[0].object !== 'floor') {
+                    if (intersects[0].object.material !== sphereMaterial && intersects[0].object.name !== 'floor') {
                         selected_object = intersects[0].object;
                         settings.name = selected_object.name;
                     }
@@ -336,11 +374,6 @@
     }
 
     var prevTime = Date.now();
-    var t = 0;
-
-    var up = new THREE.Vector3(0, 1, 0);
-    var axis = new THREE.Vector3();
-    var pt, radians, axis, tangent;
 
     function render() {
         secondsPassed = clock.getElapsedTime();
@@ -350,43 +383,6 @@
             playAnimations();
         }
 
-        /*
-        if (t === 0) {
-            console.log("OBJECT INITIAL POS");
-            console.log(object.position);
-        }
-
-
-        // teste só para 1 trajetoria
-        if (t < 1) {
-            var spline = object_trajectories[object.name][0]['line'];
-
-
-            // set the marker position
-            //object.position.copy(spline.getPointAt(t));
-            pt = spline.getPointAt(t);
-            console.log("PT");
-            console.log(pt);
-            object.position.set(pt.x, pt.y, pt.z);
-            console.log("OBJECT POS");
-            console.log(object.position);
-
-            // get the tangent to the curve
-            tangent = spline.getTangent(t).normalize();
-
-            // calculate the axis to rotate around
-            //axis.crossVectors(up, tangent).normalize();
-
-            // calcluate the angle between the up vector and the tangent
-            radians = Math.acos(up.dot(tangent));
-
-            // set the quaternion
-            object.quaternion.setFromAxisAngle(axis, radians);
-            t += 0.005;
-            // 60fps -> 60 incrementos - 1 segundo
-            // 3 segundos - 180 incrementos  t = [0,1]  1 / 180 = 0.005555555555555556
-        }
-        */
         renderer.render(scene, camera);
         //controls.update();
     }
@@ -448,6 +444,30 @@
             }
             prevTime = time;
         }
+    }
+
+    function displayObjectAnimations() {
+
+        var text = '<br><br> Animations of object ' + selected_object.name + "<br><ul>";
+        var animations = objCollection.getObject(selected_object.name).animations;
+        console.log(animations);
+
+        for (var i = 0; i < animations.length; i++) {
+
+            if (animations[i].type === 'trajectory') {
+                //text += '<p> Trajectory: ' + animations[i].start + ' - ' + animations[i].end + ' seg</p>';
+                text += '<li> Trajectory: ' + animations[i].start + ' - ' + animations[i].end + ' seg</li>';
+            }
+
+            if (animations[i].type === 'rotation') {
+                text += '<li> Rotation: (' + animations[i].json.animation.axis.x + ', '
+                    + animations[i].json.animation.axis.y + ', ' + animations[i].json.animation.axis.z
+                    + ') ' + animations[i].start + ' - ' + animations[i].end + ' seg</li>';
+            }
+
+        }
+        document.getElementById('animations').innerHTML= text + "</ul>";
+
     }
 
 </script>

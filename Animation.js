@@ -13,6 +13,7 @@ class Animation {
   getObj(){
       return this.obj;
   }
+
   rotation(x , y , z){
       this.type = "rotation";
       this.json.animation = {"type": "rotation", "axis": {"x":x , "y":y, "z":z}};
@@ -42,7 +43,7 @@ class Animation {
 
   trajectory(positions, line) {
       this.type = "trajectory";
-      this.json.animation = {"trajectory": {"pos": positions, "line": line}};
+      this.json.animation = {"type": "trajectory", "pos": positions, "line": line };
   }
 
 }
