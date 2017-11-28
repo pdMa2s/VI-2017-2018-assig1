@@ -1,15 +1,11 @@
 class Animation {
-  constructor(obj,start, end) {
-    this.start = start;
-    this.end = end;
+  constructor(obj,duration) {
+    this.duration = duration;
     this.json = {"animation": {}};
     this.type = "";
     this.obj = obj;
   }
 
-  getStart(){
-      return this.start;
-  }
   getObj(){
       return this.obj;
   }
@@ -26,8 +22,8 @@ class Animation {
   getType(){
       return this.type;
   }
-  getEndTime(){
-      return this.end;
+  getDuration(){
+      return this.duration;
   }
 
   translation(positions){
