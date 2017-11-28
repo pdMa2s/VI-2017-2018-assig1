@@ -1,11 +1,19 @@
 class Animation {
-  constructor(obj,duration) {
+  constructor(obj,duration, id) {
     this.duration = duration;
-    this.json = {"animation": {}};
+    this.json = {"animation": {}, "id": id};
     this.type = "";
     this.obj = obj;
+    this.id = id;
   }
-
+  getJson(){
+      if(this.type === "rotation"){
+          return this.json;
+      }
+      else{
+          return  { "animation": {"type": "trajectory", "pos": this.exportJsonPositions()}, "id": this.id};
+      }
+  }
   getObj(){
       return this.obj;
   }
@@ -37,6 +45,14 @@ class Animation {
       this.json.animation = {"type": "translation", "positions": jsonPos};
   }
 
+  exportJsonPositions(){
+      var positions = this.json.animation.pos;
+      var jsonToExport = [];
+      for(let i = 0; i< positions.length; i++){
+          jsonToExport.push({"x": positions[i].x, "y": positions[i].y, "z": positions[i].z});
+      }
+      return jsonToExport;
+  }
   trajectory(positions, line) {
       this.type = "trajectory";
       this.json.animation = {"type": "trajectory", "pos": positions, "line": line };

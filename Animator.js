@@ -8,7 +8,7 @@ var rotatedZ = 0;
 var t = 0;
 var fps = 60;
 var animatorAnims = [];
-
+var animationId = 1;
 function addAnimatorAnis(anim) {
     animatorAnims.push(anim);
 }
@@ -21,10 +21,11 @@ function removeAmin(obj) {
 }
 function createRotation() {
 
-    var animation = new Animation(selected_object,animationDuration);
+    var animation = new Animation(selected_object,animationDuration, animationId);
     animation.rotation(rX, rY, rZ);
     objCollection.addAnimation(selected_object.name, animation);
     addAnimatorAnis(animation);
+    animationId ++;
 }
 
 function play(prevTime, animation) {
@@ -138,10 +139,11 @@ function createTrajectory() {
         else {
             var line = generateTrajectoryLine();
 
-            var animation = new Animation(selected_object, animationDuration);
+            var animation = new Animation(selected_object, animationDuration, animationId);
             animation.trajectory(trajPositions, line);
             objCollection.addAnimation(selected_object.name, animation);
             addAnimatorAnis(animation);
+            animationId++;
             //meter pos em vez de esferas
             //generateTrajectoryLine(selected_object);
             //chamar a cena animation.cenas e passar pos
