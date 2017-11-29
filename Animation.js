@@ -58,7 +58,6 @@ class Animation {
   trajectory(positions, line) {
       this.type = "trajectory";
       this.json.animation = {"type": "trajectory", "pos": positions, "line": line };
-      alert(this.duration);
   }
 
 }
