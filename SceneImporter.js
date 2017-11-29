@@ -16,9 +16,9 @@ function importScene(jsonString) {
 function importObjs(sceneObjs) {
     for (let i = 0; i < sceneObjs.length; i++) {
             let pos = position(sceneObjs[i].position.x, sceneObjs[i].position.y, sceneObjs[i].position.z);
-            addObj(sceneObjs[i].name, sceneObjs[i].scale, sceneObjs[i].url, sceneObjs[i].texture, pos);
-            let objName = addJsonModel(sceneObjs[i].url, sceneObjs[i].name, pos);
-
+            //addObj(sceneObjs[i].name, sceneObjs[i].scale, sceneObjs[i].url, sceneObjs[i].texture, pos);
+            let obj = addJsonModel(sceneObjs[i].url, sceneObjs[i].name, pos, sceneObjs[i].scale);
+            importAnimations(obj,sceneObjs[i].animations);
         }
 }
 
@@ -29,9 +29,10 @@ function importAnimations(obj,animations) {
             ani.rotation(animations[i].animation.axis.x,animations[i].animation.axis.y, animations[i].animation.axis.z);
         }
         else{
-            ani.trajectory()
+            //ani.trajectory()
         }
-        obj.addAnimation(animation)
+        obj.addAnimation(ani);
+        objCollection.addAnimation(obj.name, ani);
     }
 
     scene.background.setHSL(sceneProperties.sceneBackground.h, sceneProperties.sceneBackground.s,

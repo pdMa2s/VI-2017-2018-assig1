@@ -20,7 +20,7 @@ function removeObj(obj) {
     objCollection.removeSceneObject(obj);
 }
 
-function addJsonModel(model, name, pos= null) {
+function addJsonModel(model, name, pos= null, importScale = null) {
     name = name + '_' + count;
     var mesh;
     var loader = new THREE.JSONLoader();
@@ -30,9 +30,15 @@ function addJsonModel(model, name, pos= null) {
             morphTargets: true,
         }));
 
-        mesh.scale.set(scale, scale, scale);
+        if(importScale !== null){
+            mesh.scale.set(importScale, importScale, importScale);
+        }
+        else{
+            mesh.scale.set(scale, scale, scale);
+        }
+
         mesh.name = name;
-        if(pos != null){
+        if(pos !== null){
             mesh.position.set(pos.x, pos.y, pos.z);
         }
         objects.push(mesh);
@@ -43,7 +49,7 @@ function addJsonModel(model, name, pos= null) {
         count++;
         addObj(name, scale, model, "", mesh.position);
     });
-    return name;
+    return mesh;
 }
 
 function setScale(newScale) {

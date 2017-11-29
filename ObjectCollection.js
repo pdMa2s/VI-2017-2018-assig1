@@ -58,7 +58,7 @@ class ObjectCollection {
         for (let i = nrAnimations; i >= 0; i--) {
             for (let j = 0; j < nrAnimations - 1; j++) {
                 k = j + 1;
-                if (this.sortedAnimations[j].getStart() > this.sortedAnimations[k].getStart()) {
+                if (this.sortedAnimations[j].id > this.sortedAnimations[k].id) {
                     this.swapNumbers(j, k, this.sortedAnimations);
                 }
             }
