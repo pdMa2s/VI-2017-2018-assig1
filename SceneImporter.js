@@ -33,6 +33,11 @@ function importAnimations(obj,animations) {
         }
         obj.addAnimation(animation)
     }
+
+    scene.background.setHSL(sceneProperties.sceneBackground.h, sceneProperties.sceneBackground.s,
+        sceneProperties.sceneBackground.l);
+
+    addFloor(sceneProperties.floorType);
 }
 function position(xCord, yCord, zCord) {
     return {x: xCord, y: yCord, z: zCord};
