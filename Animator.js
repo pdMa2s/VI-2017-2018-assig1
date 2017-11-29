@@ -43,7 +43,7 @@ function play(prevTime, animation) {
     return true;
 }
 
-var up = new THREE.Vector3(0, 1, 0);
+var up = new THREE.Vector3(0, 0, 1);
 var axis = new THREE.Vector3();
 var pt, radians, axis, tangent;
 
@@ -63,14 +63,15 @@ function translateObject(obj, animation) {
         tangent = spline.getTangent(t).normalize();
 
         // calculate the axis to rotate around
-        //axis.crossVectors(up, tangent).normalize();
+        axis.crossVectors(up, tangent).normalize();
 
         // calcluate the angle between the up vector and the tangent
-        //radians = Math.acos(up.dot(tangent));
+        radians = Math.acos(up.dot(tangent));
 
         // set the quaternion
 
-        //obj.quaternion.setFromAxisAngle(axis, radians);
+        obj.quaternion = new THREE.Quaternion();
+        obj.quaternion.setFromAxisAngle(axis, radians);
         t += 1 / (duration * fps);
 
         // 60fps -> 60 incrementos - 1 segundo
