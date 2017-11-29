@@ -147,47 +147,22 @@
             }
         );
 
-        //LIGHTS
-        var light = new THREE.DirectionalLight(0xefefff, 1.5);
-        light.position.set(1, 1, 1).normalize();
-        scene.add(light);
-
-        light = new THREE.DirectionalLight(0xffefef, 1.5);
-        light.position.set(-1, -1, -1).normalize();
-        scene.add(light);
-
-        light = new THREE.PointLight(0xffffff);
-        light.position.set(0, 250, 0);
-        scene.add(light);
-        selected_object = light;
-
         // STATS
         stats = new Stats();
         container.appendChild(stats.dom);
 
 
-        // FLOOR
-        var floorGeometry = new THREE.PlaneGeometry(9000, 9000, 100, 100);
-        floorGeometry.rotateX(-Math.PI / 2);
-        for (var i = 0, l = floorGeometry.vertices.length; i < l; i++) {
-            var vertex = floorGeometry.vertices[i];
-            vertex.x += Math.random() * 20 - 10;
-            vertex.y += Math.random() * 2;
-            vertex.z += Math.random() * 20 - 10;
-        }
-        for (var i = 0, l = floorGeometry.faces.length; i < l; i++) {
-            var face = floorGeometry.faces[i];
-            face.vertexColors[0] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-            face.vertexColors[1] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-            face.vertexColors[2] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-        }
+        //LIGHT
+        var light = new THREE.DirectionalLight( 0xefefff, 1.5 );
+        light.position.set( 1, 1, 1 ).normalize();
+        scene.add( light );
+        var light = new THREE.DirectionalLight( 0xffefef, 1.5 );
+        light.position.set( -1, -1, -1 ).normalize();
+        scene.add( light );
 
-        var floorMaterial = new THREE.MeshBasicMaterial({vertexColors: THREE.VertexColors});
-        var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-        floor.position.y = -1;
-        floor.name = 'floor';
-        selected_object = floor;
-        scene.add(floor);
+        var light = new THREE.PointLight(0xffffff);
+        light.position.set(0, 250, 0);
+        scene.add(light);
 
         createPanel();
     }
@@ -202,6 +177,8 @@
 
     function createPanel() {
         var panel = new dat.GUI({width: SCREEN_WIDTH *  0.20});
+        var folder6 = panel.addFolder('Change floor');
+        var folder7 = panel.addFolder('Scene background');
         var folder1 = panel.addFolder('Add model');
         var folder5 = panel.addFolder('Import models');
         var folder2 = panel.addFolder('Animations');
@@ -224,15 +201,30 @@
             'rotation_x': 0,
             'rotation_y': 0,
             'rotation_z': 0,
-            'name': selected_object.name,
+            'name': selected_object === undefined ? "" : selected_object.name,
             'scale': 0.5,
             'startTime': 0,
             'endTime': 0,
             'add Rotation': createRotation,
             'import obj': "",
             'import json': "",
-            'show obj animations': displayObjectAnimations
+            'show obj animations': displayObjectAnimations,
+            'change floor': 'None',
+            'hue':		0,
+            'saturation': 0,
+            'lightness':  1,
+
         };
+
+        folder6.add(settings, 'change floor', ['None', 'Multicolor', 'Wood tile', 'Grass']).onChange(
+            function (value) {
+                addFloor(value)
+            });
+
+        folder7.add( settings, "hue", 0.0, 1.0, 0.025 ).name( "hue" ).onChange( render );
+        folder7.add( settings, "saturation", 0.0, 1.0, 0.025 ).name( "saturation" ).onChange( render );
+		folder7.add( settings, "lightness", 0.0, 1.0, 0.025 ).name( "lightness" ).onChange( render );
+
 
         folder1.add(settings, 'horse');
         folder1.add(settings, 'flamingo');

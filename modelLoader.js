@@ -1,8 +1,10 @@
 var mixers = [];
 var objects = [];
 var count = 0;
-var scale  = 0.5;
+var scale = 0.5;
 var objCollection = new ObjectCollection();
+var pooledFloorObjects = createFloors();
+var floor;
 
 function addObj(name, scale, url, texture, pos) {
     var obj = new SceneObject(name, scale, pos);
@@ -10,9 +12,10 @@ function addObj(name, scale, url, texture, pos) {
     obj.setTexture(texture);
     objCollection.addSceneObject(obj);
 }
+
 function addJsonModel(model, name) {
     var loader = new THREE.JSONLoader();
-    loader.load( model, function (geometry) {
+    loader.load(model, function (geometry) {
         mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
             vertexColors: THREE.FaceColors,
             morphTargets: true,
@@ -31,49 +34,48 @@ function addJsonModel(model, name) {
     });
 
 }
+
 function setScale(newScale) {
     scale = newScale;
 
 }
 
-function addObjModel(model, material = null){
-  var loader = new THREE.OBJLoader();
+function addObjModel(model, material = null) {
+    var loader = new THREE.OBJLoader();
 
-  loader.load(
-      // resource URL
-      model,
+    loader.load(
+        // resource URL
+        model,
 
-      // pass the loaded data to the onLoad function.
-  //Here it is assumed to be an object
-      function ( obj ) {
-      //add the loaded object to the scene
-          if(material != null){
-              obj = applyMaterial(obj, material)
-          }
+        // pass the loaded data to the onLoad function.
+        //Here it is assumed to be an object
+        function (obj) {
+            //add the loaded object to the scene
+            if (material != null) {
+                obj = applyMaterial(obj, material)
+            }
 
-          let fileName = model.split(".");
-          let name = fileName[0] +"_"+ count;
-          obj.name = name;
-          obj.position.y = 35;
-          scene.add( obj );
-          objects.push(obj);
-          addObj(name, scale, model, "", obj.position);
-          count++;
-      },
+            let fileName = model.split(".");
+            let name = fileName[0] + "_" + count;
+            obj.name = name;
+            obj.position.y = 35;
+            scene.add(obj);
+            objects.push(obj);
+            addObj(name, scale, model, "", obj.position);
+            count++;
+        },
 
-      // Function called when download progresses
-      function ( xhr ) {
-          console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-      },
+        // Function called when download progresses
+        function (xhr) {
+            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        },
 
-      // Function called when download errors
-      function ( xhr ) {
-          //alert( 'Error laoding object' );
-          addJsonModel(model);
-      }
-
-
-  );
+        // Function called when download errors
+        function (xhr) {
+            //alert( 'Error laoding object' );
+            addJsonModel(model);
+        }
+    );
 
 }
 
@@ -97,7 +99,7 @@ function addCar(carModel) {
     var loader = new THREE.BinaryLoader();
     loader.load(CARS[carModel].url, function (geometry) {
 
-        createCar(geometry,CARS[carModel].url ,carModel);
+        createCar(geometry, CARS[carModel].url, carModel);
     });
 }
 
@@ -113,7 +115,7 @@ function applyTexture(textureFile) {
 }
 
 function addBox() {
-    var side = 10 * scale +4;
+    var side = 10 * scale + 4;
     var tex = "textures/crateTexture.jpg";
     var geometry = new THREE.BoxGeometry(side, side, side);
     var boxTexture = applyTexture(tex);
@@ -143,11 +145,11 @@ function addEarth() {
 }
 
 function addHorse() {
-    addJsonModel("three.js-master/examples/models/animated/horse.js","horse");
+    addJsonModel("three.js-master/examples/models/animated/horse.js", "horse");
 }
 
 function addFlamingo() {
-    addJsonModel("three.js-master/examples/models/animated/flamingo.js","flamingo");
+    addJsonModel("three.js-master/examples/models/animated/flamingo.js", "flamingo");
 }
 
 function addParrot() {
@@ -155,15 +157,15 @@ function addParrot() {
 }
 
 function addStork() {
-    addJsonModel("three.js-master/examples/models/animated/stork.js","stork");
+    addJsonModel("three.js-master/examples/models/animated/stork.js", "stork");
 }
 
-function createCar(geometry, url,car) {
+function createCar(geometry, url, car) {
 
     geometry.sortFacesByMaterialIndex();
 
     var m = [],
-        s = CARS[car].scale * (scale/10),
+        s = CARS[car].scale * (scale / 10),
         r = CARS[car].init_rotation,
         materials = CARS[car].materials,
         mi = CARS[car].init_material,
@@ -182,7 +184,7 @@ function createCar(geometry, url,car) {
     mesh.rotation.z = r[ 2 ];*/
 
     mesh.scale.x = mesh.scale.y = mesh.scale.z = s;
-    var name = car+ "_" + count;
+    var name = car + "_" + count;
     mesh.name = name;
     objects.push(mesh);
     count++;
@@ -506,3 +508,70 @@ CARS["camaro"].mmap = {
     8: mlib["Fullblack rough"]    // behind grille
 
 };
+
+function createFloors() {
+    var pooledFloors = [];
+    var floorGeometry = new THREE.PlaneGeometry(9000, 9000, 100, 100);
+    for (var i = 0, l = floorGeometry.vertices.length; i < l; i++) {
+        var vertex = floorGeometry.vertices[i];
+        vertex.x += Math.random() * 20 - 10;
+        vertex.y += Math.random() * 2;
+        vertex.z += Math.random() * 20 - 10;
+    }
+    for (var i = 0, l = floorGeometry.faces.length; i < l; i++) {
+        var face = floorGeometry.faces[i];
+        face.vertexColors[0] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
+        face.vertexColors[1] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
+        face.vertexColors[2] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
+    }
+
+    var floorMaterial = new THREE.MeshBasicMaterial({vertexColors: THREE.VertexColors});
+    floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.position.y = -1;
+    floorGeometry.rotateX(-Math.PI / 2);
+    floor.name = 'floor';
+    pooledFloors.push(floor);
+
+
+    var floorTexture =  new THREE.TextureLoader().load('textures/tiles.jpg');
+    floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+    floorTexture.repeat.set(10, 10);
+    floorMaterial = new THREE.MeshBasicMaterial({map: floorTexture, side: THREE.DoubleSide});
+    floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.position.y = -1;
+    floor.name = 'floor';
+    pooledFloors.push(floor);
+
+    floorTexture = new THREE.TextureLoader().load('textures/grassTexture.jpg');
+    floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+    floorTexture.repeat.set(10, 10);
+    floorMaterial = new THREE.MeshBasicMaterial({map: floorTexture, side: THREE.DoubleSide});
+    floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.position.y = -1;
+    floor.name = 'floor';
+    pooledFloors.push(floor);
+
+    return pooledFloors;
+
+}
+function addFloor(type) {
+    var obj= scene.getObjectByName('floor');
+    obj.geometry.dispose();
+    scene.remove(obj);
+
+    switch (type) {
+        case "Multicolor":
+            scene.add(pooledFloorObjects[0]);
+            break;
+
+        case "Wood tile":
+            scene.add(pooledFloorObjects[1]);
+            break;
+
+        case "Grass":
+            scene.add(pooledFloorObjects[2]);
+            break;
+    }
+
+
+}
