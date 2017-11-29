@@ -1,6 +1,4 @@
-var animationStart = 0;
-var animationEnd = 0;
-var timeLineMax = 0;
+var animationDuration = 1;
 var rX = 0;
 var rY = 0;
 var rZ = 0;
@@ -9,16 +7,25 @@ var rotatedY = 0;
 var rotatedZ = 0;
 var t = 0;
 var fps = 60;
+var animatorAnims = [];
+var animationId = 1;
+function addAnimatorAnis(anim) {
+    animatorAnims.push(anim);
+}
 
-
-function createRotation() {
-    if (animationEnd > timeLineMax) {
-        timeLineMax = animationEnd;
+function removeAmin(obj) {
+    for(let i = 0; i< animatorAnims.length; i++){
+        if(animatorAnims[i].getObj().name === obj.name)
+            animatorAnims.splice(i,1);
     }
-    var animation = new Animation(selected_object,animationStart, animationEnd);
+}
+function createRotation() {
+
+    var animation = new Animation(selected_object,animationDuration, animationId);
     animation.rotation(rX, rY, rZ);
     objCollection.addAnimation(selected_object.name, animation);
-
+    addAnimatorAnis(animation);
+    animationId ++;
 }
 
 function play(prevTime, animation) {
@@ -41,7 +48,7 @@ var axis = new THREE.Vector3();
 var pt, radians, axis, tangent;
 
 function translateObject(obj, animation) {
-    var duration = animation.end - animation.start;
+    var duration = animation.getDuration();
     if (t < 1) {
 
         var spline = animation.json.animation.line;
@@ -77,7 +84,7 @@ function translateObject(obj, animation) {
 
 
 function rotateObject(obj, prevTime, animation) {
-    var animationTime = animation.getEndTime();
+    var animationTime = animation.getDuration();
 
     var date = new Date();
     var now = date.getTime();
@@ -132,10 +139,11 @@ function createTrajectory() {
         else {
             var line = generateTrajectoryLine();
 
-            var animation = new Animation(selected_object, animationStart, animationEnd);
+            var animation = new Animation(selected_object, animationDuration, animationId);
             animation.trajectory(trajPositions, line);
             objCollection.addAnimation(selected_object.name, animation);
-
+            addAnimatorAnis(animation);
+            animationId++;
             //meter pos em vez de esferas
             //generateTrajectoryLine(selected_object);
             //chamar a cena animation.cenas e passar pos

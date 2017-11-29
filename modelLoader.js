@@ -13,6 +13,11 @@ function addObj(name, scale, url, texture, pos) {
     objCollection.addSceneObject(obj);
 }
 
+function removeObj(obj) {
+    scene.remove(obj);
+    objCollection.removeSceneObject(obj);
+}
+
 function addJsonModel(model, name) {
     var loader = new THREE.JSONLoader();
     loader.load(model, function (geometry) {

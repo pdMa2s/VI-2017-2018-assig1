@@ -38,6 +38,7 @@ class SceneObject {
 
     addAnimation(animation) {
         this.animations.push(animation);
+        this.json.animations.push(animation.getJson());
     }
 
     getAnimations(){

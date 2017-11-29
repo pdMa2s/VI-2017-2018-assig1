@@ -59,6 +59,7 @@
 <script src="Animation.js"></script>
 <script src="createObjectAnimation.js"></script>
 <script src="Animator.js"></script>
+<script src="SceneExporter.js"></script>
 
 <script>
     var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
@@ -195,7 +196,7 @@
             'gallardo': addGallardo,
             'f50': addF50,
             'wireframe': false,
-            'start/pause': StartAnimation,
+            'play animations': StartAnimation,
             'create/save trajectory': createTrajectory,
             'geometry': 'Cube',
             'rotation_x': 0,
@@ -203,17 +204,17 @@
             'rotation_z': 0,
             'name': selected_object === undefined ? "" : selected_object.name,
             'scale': 0.5,
-            'startTime': 0,
-            'endTime': 0,
+            'duration' : 1,
             'add Rotation': createRotation,
-            'import obj': "",
+            'import .obj': "",
             'import json': "",
             'show obj animations': displayObjectAnimations,
             'change floor': 'None',
             'hue':		0,
             'saturation': 0,
             'lightness':  1,
-
+            'remove model' : removeModel,
+            'export scene' : exportScene
         };
 
         folder6.add(settings, 'change floor', ['None', 'Multicolor', 'Wood tile', 'Grass']).onChange(
@@ -248,19 +249,16 @@
 
 
         });
-        folder5.add(settings, 'import obj').onChange(function (value) {
+        folder5.add(settings, 'import .obj').onChange(function (value) {
             addObjModel(value);
         });
 
 
         //folder1.open();
         var step = 0.0001;
-        folder2.add(settings, 'start/pause');
-        folder2.add(settings, 'startTime').name('Start time').onChange(function (value) {
-            animationStart = value;
-        });
-        folder2.add(settings, 'endTime').name('End time').onChange(function (value) {
-            animationEnd = value;
+        folder2.add(settings, 'play animations');
+        folder2.add(settings, 'duration').min(0.001).onChange(function (value) {
+            animationDuration = value;
         });
         folder2.add(settings, 'create/save trajectory').name('create/save trajectory');
         folder2.add(settings, 'rotation_x').min(-1).max(1).step(step).name('Rotation X axis').onChange(function (value) {
@@ -280,7 +278,9 @@
         folder3.add(settings, 'wireframe').onChange(function (value) {
             selected_object.material.wireframe = value;
         });
-
+        folder3.add(settings, 'remove model').onChange(function (value) {
+            removeModel(selected_object);
+        });
         folder3.add(settings, 'show obj animations').name('show selected object animations');
         //folder3.open();
 
@@ -292,9 +292,10 @@
         folder4.add(settings, 'geometry', ['Cube', 'Sphere', 'Torus']).onChange(render);
         //folder4.open();
 
+        panel.add(settings, 'export scene');
         console.log(panel.__folders['Animations']);
-        panel.__folders['Animations'].__ul.childNodes[4].childNodes[0].childNodes[0].classList += ' full_width';
-        panel.__folders['Animations'].__ul.childNodes[8].childNodes[0].childNodes[0].classList += ' full_width';
+        panel.__folders['Animations'].__ul.childNodes[3].childNodes[0].childNodes[0].classList += ' full_width';
+        panel.__folders['Animations'].__ul.childNodes[7].childNodes[0].childNodes[0].classList += ' full_width';
         panel.__folders['Selected object settings'].__ul.childNodes[3].childNodes[0].childNodes[0].classList += ' full_width';
 
         var interfaceDiv = document.getElementById('interface');
@@ -395,7 +396,7 @@
             runAnim = false;
             isPlay = true;
             theta = 0.1;
-            sortedAnimations = objCollection.getSortedAnimations();
+            sortedAnimations = animatorAnims;
             updateTimeBefore();
         }
 
@@ -461,6 +462,10 @@
         }
         document.getElementById('animations').innerHTML= text + "</ul>";
 
+    }
+    function removeModel(obj) {
+        removeObj(obj);
+        removeAmin(obj)
     }
 
 </script>
