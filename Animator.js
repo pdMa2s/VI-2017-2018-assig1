@@ -223,7 +223,3 @@ function generateTrajectoryLine() {
     scene.add(line);
     return spline;
 }
-
-function sortAnimations() {
-
-}

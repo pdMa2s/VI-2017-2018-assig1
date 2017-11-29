@@ -4,6 +4,12 @@ function importScene(jsonString) {
     if (sceneImported === false) {
 
         var sceneProperties = JSON.parse(jsonString);
+
+        scene.background.setHSL(sceneProperties.sceneBackground.h, sceneProperties.sceneBackground.s,
+        sceneProperties.sceneBackground.l);
+
+        addFloor(sceneProperties.floorType);
+
         var sceneObjs = sceneProperties.sceneObjects;
         importObjs(sceneObjs);
 
@@ -28,20 +34,16 @@ function importAnimations(obj,animations) {
         if(animations[i].animation.type === "rotation"){
             ani.rotation(animations[i].animation.axis.x,animations[i].animation.axis.y, animations[i].animation.axis.z);
         }
-        else{
+        else {
+
+
+
             //ani.trajectory()
         }
         obj.addAnimation(ani);
         objCollection.addAnimation(obj.name, ani);
     }
-
-    scene.background.setHSL(sceneProperties.sceneBackground.h, sceneProperties.sceneBackground.s,
-        sceneProperties.sceneBackground.l);
-
-    addFloor(sceneProperties.floorType);
 }
 function position(xCord, yCord, zCord) {
     return {x: xCord, y: yCord, z: zCord};
 }
-
-
