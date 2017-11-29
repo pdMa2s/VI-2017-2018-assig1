@@ -561,7 +561,7 @@ function createFloors() {
 
 }
 function addFloor(type) {
-    var obj= scene.getObjectByName('floor');
+    var obj = scene.getObjectByName('floor');
     scene.remove(obj);
 
     switch (type) {
