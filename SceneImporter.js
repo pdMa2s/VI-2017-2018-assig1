@@ -27,7 +27,11 @@ function importObjs(sceneObjs) {
     }
 }
 
-
 function position(xCord, yCord, zCord) {
     return {x: xCord, y: yCord, z: zCord};
+}
+
+function generateTrajectoryLineFromJSON() {
+    var points = [];
+
 }

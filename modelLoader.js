@@ -12,8 +12,8 @@ function addObj(name, scale, url, texture, pos, animations = null) {
     obj.setUrl(url);
     obj.setTexture(texture);
     objCollection.addSceneObject(obj);
-    if(animations !== null){
-        importAnimations(obj,animations);
+    if (animations !== null) {
+        importAnimations(obj, animations);
     }
 }
 
@@ -23,7 +23,7 @@ function removeObj(obj) {
     objCollection.removeSceneObject(obj);
 }
 
-function addJsonModel(model, name, pos= null, importScale = null, animations = null) {
+function addJsonModel(model, name, pos = null, importScale = null, animations = null) {
     name = name + '_' + count;
     var mesh;
     var loader = new THREE.JSONLoader();
@@ -33,15 +33,15 @@ function addJsonModel(model, name, pos= null, importScale = null, animations = n
             morphTargets: true,
         }));
 
-        if(importScale !== null){
+        if (importScale !== null) {
             mesh.scale.set(importScale, importScale, importScale);
         }
-        else{
+        else {
             mesh.scale.set(scale, scale, scale);
         }
 
         mesh.name = name;
-        if(pos !== null){
+        if (pos !== null) {
             mesh.position.set(pos.x, pos.y, pos.z);
         }
         objects.push(mesh);
@@ -50,23 +50,34 @@ function addJsonModel(model, name, pos= null, importScale = null, animations = n
         var clip = THREE.AnimationClip.CreateFromMorphTargetSequence('move', geometry.morphTargets, 30);
         mixers[mixers.length - 1].clipAction(clip).setDuration(1).play();
         count++;
-        if(animations !== null){
+        if (animations !== null) {
             addObj(name, scale, model, "", mesh.position, animations);
-        }else{
+        } else {
             addObj(name, scale, model, "", mesh.position);
         }
     });
     return mesh;
 }
-function importAnimations(obj,animations) {
+
+function importAnimations(obj, animations) {
     for (let i = 0; i < animations.length; i++) {
-        let ani = new Animation(obj, animations[i].duration, animations[i].id );
-        if(animations[i].animation.type === "rotation"){
-            ani.rotation(animations[i].animation.axis.x,animations[i].animation.axis.y, animations[i].animation.axis.z);
+        let ani = new Animation(obj, animations[i].duration, animations[i].id);
+        if (animations[i].animation.type === "rotation") {
+            ani.rotation(animations[i].animation.axis.x, animations[i].animation.axis.y, animations[i].animation.axis.z);
         }
         else {
+            var trajPos = [];
+            for (var j = 0; j < animations[i].animation.pos.length; j++) {
+                trajPos.push(new THREE.Vector3(animations[i].animation.pos[j].x, animations[i].animation.pos[j].y,
+                    animations[i].animation.pos[j].z));
+            }
+            console.log(trajPos);
 
-            //ani.trajectory()
+
+            //var line = generateTrajectoryLineFromJSON();
+
+            //ani.trajectory(trajPositions, line);
+
         }
         obj.addAnimation(ani);
         objCollection.addAnimation(obj.name, ani);
@@ -571,7 +582,7 @@ function createFloors() {
     pooledFloors.push(floor);
 
 
-    var floorTexture =  new THREE.TextureLoader().load('textures/tiles.jpg');
+    var floorTexture = new THREE.TextureLoader().load('textures/tiles.jpg');
     floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
     floorTexture.repeat.set(10, 10);
     floorMaterial = new THREE.MeshBasicMaterial({map: floorTexture, side: THREE.DoubleSide});
@@ -592,6 +603,7 @@ function createFloors() {
     return pooledFloors;
 
 }
+
 function addFloor(type) {
     var obj = scene.getObjectByName('floor');
     scene.remove(obj);
