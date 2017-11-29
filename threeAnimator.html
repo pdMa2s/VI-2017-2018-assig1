@@ -304,7 +304,9 @@
         //folder4.open();
 
         panel.add(settings, 'export scene');
-        console.log(panel.__folders['Animations']);
+        panel.add(settings, 'import scene').onChange(function (value) {
+            importScene(value);
+        });;
         panel.__folders['Animations'].__ul.childNodes[3].childNodes[0].childNodes[0].classList += ' full_width';
         panel.__folders['Animations'].__ul.childNodes[7].childNodes[0].childNodes[0].classList += ' full_width';
         panel.__folders['Selected object settings'].__ul.childNodes[3].childNodes[0].childNodes[0].classList += ' full_width';
