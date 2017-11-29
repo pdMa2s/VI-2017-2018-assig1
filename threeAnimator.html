@@ -110,41 +110,6 @@
 
         dragControls.addEventListener('dragend', function (event) {
                 controls.enabled = true;
-                /*
-               if (event.object.material ===  sphereMaterial) {
-                   var array = object_trajectories[selected_object.name];
-                   var spheres = array[array.length - 1]["spheres"];
-                   var vectors = [];
-                   for (var i = 0; i < spheres.children.length; i++) {
-                       var point1 = spheres.children[i].position;
-                       vectors.push(point1);
-                   }
-
-                   if (vectors.length > 1) {
-
-                       var line = array[array.length - 1]["line"];
-
-                       var curve = new THREE.CatmullRomCurve3(vectors);
-                       var points = curve.getPoints(numPoints);
-                       var geometry = new THREE.Geometry();
-                       for (var i = 0; i < points.length; i++) {
-                           geometry.vertices.push(points[i]);
-                       }
-                       var curveObject = new THREE.Line(geometry, lineMaterial);
-
-                       if (line === null) {
-                           scene.add(curveObject);
-                           array[array.length - 1]["line"] = curveObject;
-                       }
-
-                       else {
-                           array[array.length - 1]["line"] = curveObject;
-                           animate();
-                       }
-                   }
-               }
-               */
-
                 objCollection.setPosition(selected_object.name, selected_object.position);
             }
         );
