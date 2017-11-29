@@ -62,7 +62,7 @@ function addJsonModel(model, name, pos = null, importScale = null, animations = 
     return mesh;
 }
 
-function importAnimations(obj, mesh,animations) {
+function importAnimations(obj, mesh, animations) {
     for (let i = 0; i < animations.length; i++) {
         let ani = new Animation(mesh, animations[i].duration, animations[i].id);
         if (animations[i].animation.type === "rotation") {
@@ -71,20 +71,56 @@ function importAnimations(obj, mesh,animations) {
 
         else {
             var trajPos = [];
+            if (i > 0) {
+                var nAnteriorPos = animations[i - 1].animation.pos.length;
+                var lastPosition = animations[i - 1].animation.pos[nAnteriorPos - 1];
+                trajPos.push(new THREE.Vector3(lastPosition.x, lastPosition.y, lastPosition.z));
+            }
+
+
             for (var j = 0; j < animations[i].animation.pos.length; j++) {
                 trajPos.push(new THREE.Vector3(animations[i].animation.pos[j].x, animations[i].animation.pos[j].y,
                     animations[i].animation.pos[j].z));
             }
             console.log(trajPos);
 
+            var line = generateTrajectoryLineFromJSON(obj, trajPos);
 
-            //var line = generateTrajectoryLineFromJSON();
-
-            //ani.trajectory(trajPositions, line);
+            ani.trajectory(trajPos, line);
 
         }
         objCollection.addAnimation(obj.name, ani);
     }
+}
+
+function generateTrajectoryLineFromJSON(obj, points) {
+    var spline = new THREE.CatmullRomCurve3(points);
+
+    var geometry = new THREE.Geometry();
+    var splinePoints = spline.getPoints(numPoints);
+
+    for (var i = 0; i < splinePoints.length; i++) {
+        geometry.vertices.push(splinePoints[i]);
+    }
+    var lineMaterial = new THREE.LineBasicMaterial({linewidth: 2});
+
+    var line = new THREE.Line(geometry, lineMaterial);
+    //line.material.color = new THREE.Color(0xe6194b);
+
+    var nTraj = obj.getNumberOfTrajectories();
+
+    if (nTraj < trajectoryColors.length) {
+        line.material.color = trajectoryColors[nTraj];
+    }
+
+    else {
+        line.material.color = trajectoryColors[nTraj % trajectoryColors.length];
+    }
+
+
+    scene.add(line);
+    return spline;
+
 }
 
 function setScale(newScale) {

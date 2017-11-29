@@ -70,12 +70,23 @@
     var clock = new THREE.Clock();
     var secondsPassed;
 
-
     // Boolean for animationStart and restart
     var theta = 0;
     var initAnim = true;
     var runAnim = false;
     var isPlay = false;
+
+
+window.onbeforeunload = function (event) {
+    var message = 'Important: Please click on \'Save\' button to leave this page.';
+    if (typeof event == 'undefined') {
+        event = window.event;
+    }
+    if (event) {
+        event.returnValue = message;
+    }
+    return message;
+};
 
     init();
     animate();
@@ -110,41 +121,6 @@
 
         dragControls.addEventListener('dragend', function (event) {
                 controls.enabled = true;
-                /*
-               if (event.object.material ===  sphereMaterial) {
-                   var array = object_trajectories[selected_object.name];
-                   var spheres = array[array.length - 1]["spheres"];
-                   var vectors = [];
-                   for (var i = 0; i < spheres.children.length; i++) {
-                       var point1 = spheres.children[i].position;
-                       vectors.push(point1);
-                   }
-
-                   if (vectors.length > 1) {
-
-                       var line = array[array.length - 1]["line"];
-
-                       var curve = new THREE.CatmullRomCurve3(vectors);
-                       var points = curve.getPoints(numPoints);
-                       var geometry = new THREE.Geometry();
-                       for (var i = 0; i < points.length; i++) {
-                           geometry.vertices.push(points[i]);
-                       }
-                       var curveObject = new THREE.Line(geometry, lineMaterial);
-
-                       if (line === null) {
-                           scene.add(curveObject);
-                           array[array.length - 1]["line"] = curveObject;
-                       }
-
-                       else {
-                           array[array.length - 1]["line"] = curveObject;
-                           animate();
-                       }
-                   }
-               }
-               */
-
                 objCollection.setPosition(selected_object.name, selected_object.position);
             }
         );
@@ -293,15 +269,6 @@
             removeModel(selected_object);
         });
         folder3.add(settings, 'show obj animations').name('show selected object animations');
-        //folder3.open();
-
-        var folder4 = panel.addFolder('Create object');
-
-        //Tirar
-        //meter cores e assim?? ou não permitimos criar objeos pela gui MATOS?
-
-        folder4.add(settings, 'geometry', ['Cube', 'Sphere', 'Torus']).onChange(render);
-        //folder4.open();
 
         panel.add(settings, 'export scene');
         panel.add(settings, 'import scene').onChange(function (value) {
@@ -309,7 +276,7 @@
         });
         panel.__folders['Animations'].__ul.childNodes[3].childNodes[0].childNodes[0].classList += ' full_width';
         panel.__folders['Animations'].__ul.childNodes[7].childNodes[0].childNodes[0].classList += ' full_width';
-        panel.__folders['Selected object settings'].__ul.childNodes[3].childNodes[0].childNodes[0].classList += ' full_width';
+        panel.__folders['Selected object settings'].__ul.childNodes[4].childNodes[0].childNodes[0].classList += ' full_width';
 
         var interfaceDiv = document.getElementById('interface');
         interfaceDiv.appendChild(panel.domElement);
@@ -391,7 +358,6 @@
         }
 
         renderer.render(scene, camera);
-        //controls.update();
     }
 
     var sortedAnimations = [];
@@ -459,19 +425,17 @@
 
         var text = '<br><br> Animations of object ' + selected_object.name + "<br><ul>";
         var animations = objCollection.getObject(selected_object.name).animations;
-        console.log(animations);
 
         for (var i = 0; i < animations.length; i++) {
 
             if (animations[i].type === 'trajectory') {
-                //text += '<p> Trajectory: ' + animations[i].start + ' - ' + animations[i].end + ' seg</p>';
-                text += '<li> Trajectory: ' + animations[i].start + ' - ' + animations[i].end + ' seg</li>';
+                text += '<li> Trajectory: ' + animations[i].duration + ' seg</li>';
             }
 
             if (animations[i].type === 'rotation') {
                 text += '<li> Rotation: (' + animations[i].json.animation.axis.x + ', '
                     + animations[i].json.animation.axis.y + ', ' + animations[i].json.animation.axis.z
-                    + ') ' + animations[i].start + ' - ' + animations[i].end + ' seg</li>';
+                    + ') ' + animations[i].duration + ' seg</li>';
             }
 
         }

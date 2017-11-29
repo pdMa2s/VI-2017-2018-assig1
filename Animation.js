@@ -1,5 +1,5 @@
 class Animation {
-  constructor(obj,duration, id) {
+  constructor(obj, duration, id) {
     this.duration = duration;
     this.json = {"animation": {}, "id": id, "duration": duration};
     this.type = "";
@@ -11,7 +11,8 @@ class Animation {
           return this.json;
       }
       else{
-          return  { "animation": {"type": "trajectory", "pos": this.exportJsonPositions()}, "id": this.id};
+          return  { "animation": {"type": "trajectory", "pos": this.exportJsonPositions()}, "id": this.id ,
+          "duration": this.duration };
       }
   }
   getObj(){

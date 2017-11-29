@@ -21,7 +21,7 @@ function removeAmin(obj) {
 }
 function createRotation() {
 
-    var animation = new Animation(selected_object,animationDuration, animationId);
+    var animation = new Animation(selected_object, animationDuration, animationId);
     animation.rotation(rX, rY, rZ);
     objCollection.addAnimation(selected_object.name, animation);
     addAnimatorAnis(animation);
@@ -43,7 +43,7 @@ function play(prevTime, animation) {
     return true;
 }
 
-var up = new THREE.Vector3(0, 1, 0);
+var up = new THREE.Vector3(0, 0, 1);
 var axis = new THREE.Vector3();
 var pt, radians, axis, tangent;
 
@@ -57,18 +57,21 @@ function translateObject(obj, animation) {
         //object.position.copy(spline.getPointAt(t));
         pt = spline.getPointAt(t);
         obj.position.set(pt.x, pt.y, pt.z);
+        console.log(obj);
 
         // get the tangent to the curve
-        //tangent = spline.getTangent(t).normalize();
+        tangent = spline.getTangent(t).normalize();
 
         // calculate the axis to rotate around
-        //axis.crossVectors(up, tangent).normalize();
+        axis.crossVectors(up, tangent).normalize();
 
         // calcluate the angle between the up vector and the tangent
-        //radians = Math.acos(up.dot(tangent));
+        radians = Math.acos(up.dot(tangent));
 
         // set the quaternion
-        //obj.quaternion.setFromAxisAngle(axis, radians);
+
+        obj.quaternion = new THREE.Quaternion();
+        obj.quaternion.setFromAxisAngle(axis, radians);
         t += 1 / (duration * fps);
 
         // 60fps -> 60 incrementos - 1 segundo
@@ -148,11 +151,6 @@ function createTrajectory() {
             objCollection.addAnimation(selected_object.name, animation);
             addAnimatorAnis(animation);
             animationId++;
-            //meter pos em vez de esferas
-            //generateTrajectoryLine(selected_object);
-            //chamar a cena animation.cenas e passar pos
-            // tirar elemento do objects esferas tbm para nao ser possivel mudar a pos
-            // ver se traje pos > 1
         }
     }
 
