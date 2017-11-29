@@ -224,6 +224,3 @@ function generateTrajectoryLine() {
     return spline;
 }
 
-function sortAnimations() {
-
-}

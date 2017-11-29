@@ -6,7 +6,7 @@ function importScene(jsonString) {
         var sceneProperties = JSON.parse(jsonString);
         var sceneObjs = sceneProperties.sceneObjects;
         importObjs(sceneObjs);
-
+        animatorAnims = objCollection.getSortedAnimations();
         sceneImported = true;
     }
 
