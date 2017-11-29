@@ -13,12 +13,15 @@ function addObj(name, scale, url, texture, pos) {
     objCollection.addSceneObject(obj);
 }
 
+
 function removeObj(obj) {
     scene.remove(obj);
     objCollection.removeSceneObject(obj);
 }
 
-function addJsonModel(model, name) {
+function addJsonModel(model, name, pos= null) {
+    name = name + '_' + count;
+    var mesh;
     var loader = new THREE.JSONLoader();
     loader.load(model, function (geometry) {
         mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
@@ -27,8 +30,10 @@ function addJsonModel(model, name) {
         }));
 
         mesh.scale.set(scale, scale, scale);
-        name = name + '_' + count;
         mesh.name = name;
+        if(pos != null){
+            mesh.position.set(pos.x, pos.y, pos.z);
+        }
         objects.push(mesh);
         scene.add(mesh);
         mixers.push(new THREE.AnimationMixer(mesh));
@@ -37,7 +42,7 @@ function addJsonModel(model, name) {
         count++;
         addObj(name, scale, model, "", mesh.position);
     });
-
+    return name;
 }
 
 function setScale(newScale) {

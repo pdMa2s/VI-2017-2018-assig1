@@ -1,7 +1,7 @@
 class Animation {
   constructor(obj,duration, id) {
     this.duration = duration;
-    this.json = {"animation": {}, "id": id};
+    this.json = {"animation": {}, "id": id, "duration": duration};
     this.type = "";
     this.obj = obj;
     this.id = id;
