@@ -1,3 +1,6 @@
-function exportScene(){
-    console.log(JSON.stringify(objCollection.getJson()) );
+function exportScene() {
+    var stringToExport = '{ "sceneBackground": ' + JSON.stringify(scene.background.getHSL()) + ',' +
+        '"floorType":'  + '"' + floorType +  '"' + ',' + JSON.stringify(objCollection.getJson().sceneObjects) + '}';
+        alert(stringToExport);
 }
+

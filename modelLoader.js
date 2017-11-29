@@ -5,6 +5,7 @@ var scale = 0.5;
 var objCollection = new ObjectCollection();
 var pooledFloorObjects = createFloors();
 var floor;
+var floorType = 'None';
 
 function addObj(name, scale, url, texture, pos) {
     var obj = new SceneObject(name, scale, pos);
@@ -564,15 +565,21 @@ function addFloor(type) {
     scene.remove(obj);
 
     switch (type) {
+        case "None":
+            floorType = "None";
+            break;
         case "Multicolor":
+            floorType = "Multicolor";
             scene.add(pooledFloorObjects[0]);
             break;
 
         case "Wood tile":
+            floorType = "Wood tile";
             scene.add(pooledFloorObjects[1]);
             break;
 
         case "Grass":
+            floorType = "Grass";
             scene.add(pooledFloorObjects[2]);
             break;
     }

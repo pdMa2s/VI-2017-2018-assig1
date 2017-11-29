@@ -83,7 +83,7 @@
 
         // SCENE
         scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xffffff);
+        scene.background = new THREE.Color("hsl(0, 0%, 100%)");
 
         // CAMERA
 
@@ -222,11 +222,18 @@
                 addFloor(value)
             });
 
-        folder7.add( settings, "hue", 0.0, 1.0, 0.025 ).name( "hue" ).onChange( function (value) {
-
+        folder7.add( settings, "hue", 0.0, 1.0, 0.025 ).name("hue").onChange( function (value) {
+            var hsl = scene.background.getHSL();
+            scene.background.setHSL(value, hsl.s, hsl.l);
         });
-        folder7.add( settings, "saturation", 0.0, 1.0, 0.025 ).name( "saturation" ).onChange( render );
-		folder7.add( settings, "lightness", 0.0, 1.0, 0.025 ).name( "lightness" ).onChange( render );
+        folder7.add( settings, "saturation", 0.0, 1.0, 0.025 ).name( "saturation" ).onChange( function (value) {
+            var hsl = scene.background.getHSL();
+            scene.background.setHSL(hsl.h, value, hsl.l);
+        });
+		folder7.add( settings, "lightness", 0.0, 1.0, 0.025 ).name( "lightness" ).onChange( function (value) {
+            var hsl = scene.background.getHSL();
+            scene.background.setHSL(hsl.h, hsl.s, value);
+        });
 
 
         folder1.add(settings, 'horse');
