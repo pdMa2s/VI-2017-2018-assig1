@@ -7,14 +7,14 @@ var pooledFloorObjects = createFloors();
 var floor;
 var floorType = 'None';
 
-function addObj(name, scale, url, texture, pos, animations = null) {
+function addObj(name, scale, url, texture, pos, animations = null, mesh = null) {
     var obj = new SceneObject(name, scale, pos);
     obj.setUrl(url);
     obj.setTexture(texture);
     objCollection.addSceneObject(obj);
     if (animations !== null) {
 
-        importAnimations(obj, animations);
+        importAnimations(obj,mesh, animations);
         animatorAnims = objCollection.getSortedAnimations();
     }
 
@@ -54,7 +54,7 @@ function addJsonModel(model, name, pos = null, importScale = null, animations = 
         mixers[mixers.length - 1].clipAction(clip).setDuration(1).play();
         count++;
         if (animations !== null) {
-            addObj(name, scale, model, "", mesh.position, animations);
+            addObj(name, scale, model, "", mesh.position, animations,mesh);
         } else {
             addObj(name, scale, model, "", mesh.position);
         }
@@ -62,10 +62,9 @@ function addJsonModel(model, name, pos = null, importScale = null, animations = 
     return mesh;
 }
 
-function importAnimations(obj, animations) {
-    alert("ENTROU");
+function importAnimations(obj, mesh, animations) {
     for (let i = 0; i < animations.length; i++) {
-        let ani = new Animation(obj, animations[i].duration, animations[i].id);
+        let ani = new Animation(mesh, animations[i].duration, animations[i].id);
         if (animations[i].animation.type === "rotation") {
             ani.rotation(animations[i].animation.axis.x, animations[i].animation.axis.y, animations[i].animation.axis.z);
         }
@@ -109,8 +108,6 @@ function generateTrajectoryLineFromJSON(obj, points) {
     //line.material.color = new THREE.Color(0xe6194b);
 
     var nTraj = obj.getNumberOfTrajectories();
-    alert(nTraj);
-
 
     if (nTraj < trajectoryColors.length) {
         line.material.color = trajectoryColors[nTraj];

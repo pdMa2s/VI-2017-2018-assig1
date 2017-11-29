@@ -26,6 +26,7 @@ class Animation {
 
   getRotationAxis(){
       var rotation = this.json.animation;
+
       return {"x" : rotation.axis.x, "y" : rotation.axis.y, "z" : rotation.axis.z }
   }
   getType(){

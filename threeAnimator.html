@@ -293,15 +293,6 @@
             removeModel(selected_object);
         });
         folder3.add(settings, 'show obj animations').name('show selected object animations');
-        //folder3.open();
-
-        var folder4 = panel.addFolder('Create object');
-
-        //Tirar
-        //meter cores e assim?? ou não permitimos criar objeos pela gui MATOS?
-
-        folder4.add(settings, 'geometry', ['Cube', 'Sphere', 'Torus']).onChange(render);
-        //folder4.open();
 
         panel.add(settings, 'export scene');
         panel.add(settings, 'import scene').onChange(function (value) {
@@ -309,7 +300,7 @@
         });
         panel.__folders['Animations'].__ul.childNodes[3].childNodes[0].childNodes[0].classList += ' full_width';
         panel.__folders['Animations'].__ul.childNodes[7].childNodes[0].childNodes[0].classList += ' full_width';
-        panel.__folders['Selected object settings'].__ul.childNodes[3].childNodes[0].childNodes[0].classList += ' full_width';
+        panel.__folders['Selected object settings'].__ul.childNodes[4].childNodes[0].childNodes[0].classList += ' full_width';
 
         var interfaceDiv = document.getElementById('interface');
         interfaceDiv.appendChild(panel.domElement);
@@ -391,7 +382,6 @@
         }
 
         renderer.render(scene, camera);
-        //controls.update();
     }
 
     var sortedAnimations = [];
@@ -411,7 +401,7 @@
             theta = 0.1;
 
             sortedAnimations = animatorAnims;
-            alert(sortedAnimations.length);
+
             updateTimeBefore();
         }
 
@@ -459,19 +449,17 @@
 
         var text = '<br><br> Animations of object ' + selected_object.name + "<br><ul>";
         var animations = objCollection.getObject(selected_object.name).animations;
-        console.log(animations);
 
         for (var i = 0; i < animations.length; i++) {
 
             if (animations[i].type === 'trajectory') {
-                //text += '<p> Trajectory: ' + animations[i].start + ' - ' + animations[i].end + ' seg</p>';
-                text += '<li> Trajectory: ' + animations[i].start + ' - ' + animations[i].end + ' seg</li>';
+                text += '<li> Trajectory: ' + animations[i].duration + ' seg</li>';
             }
 
             if (animations[i].type === 'rotation') {
                 text += '<li> Rotation: (' + animations[i].json.animation.axis.x + ', '
                     + animations[i].json.animation.axis.y + ', ' + animations[i].json.animation.axis.z
-                    + ') ' + animations[i].start + ' - ' + animations[i].end + ' seg</li>';
+                    + ') ' + animations[i].duration + ' seg</li>';
             }
 
         }

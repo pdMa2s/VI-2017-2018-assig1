@@ -92,11 +92,12 @@ function rotateObject(obj, prevTime, animation) {
     var now = date.getTime();
     var fps = animationTime * 20;
     var animationMillis = animationTime * 1000;
-    console.log(obj);
-    console.log(animation);
-    
-    if ((now - prevTime) <= animationMillis || rotated((rX / fps), (rY / fps), (rZ / fps))) {
+    //console.log(JSON.stringify(animation.getJson()) );
+    //console.log( animationMillis);
+
+    if ((now - prevTime) <= animationMillis){ //|| rotated((rX / fps), (rY / fps), (rZ / fps))) {
         var axis = animation.getRotationAxis();
+
         obj.rotation.x += (axis.x / fps);
         obj.rotation.y += (axis.y / fps);
         obj.rotation.z += (axis.z / fps);
