@@ -224,7 +224,9 @@
                 addFloor(value)
             });
 
-        folder7.add( settings, "hue", 0.0, 1.0, 0.025 ).name( "hue" ).onChange( render );
+        folder7.add( settings, "hue", 0.0, 1.0, 0.025 ).name( "hue" ).onChange( function (value) {
+
+        });
         folder7.add( settings, "saturation", 0.0, 1.0, 0.025 ).name( "saturation" ).onChange( render );
 		folder7.add( settings, "lightness", 0.0, 1.0, 0.025 ).name( "lightness" ).onChange( render );
 
