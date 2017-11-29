@@ -12,7 +12,7 @@ function importScene(jsonString) {
 
         var sceneObjs = sceneProperties.sceneObjects;
         importObjs(sceneObjs);
-        animatorAnims = objCollection.getSortedAnimations();
+
         sceneImported = true;
     }
 
@@ -23,7 +23,7 @@ function importObjs(sceneObjs) {
     for (let i = 0; i < sceneObjs.length; i++) {
             let pos = position(sceneObjs[i].position.x, sceneObjs[i].position.y, sceneObjs[i].position.z);
             //addObj(sceneObjs[i].name, sceneObjs[i].scale, sceneObjs[i].url, sceneObjs[i].texture, pos);
-            let obj = addJsonModel(sceneObjs[i].url, sceneObjs[i].name, pos, sceneObjs[i].scale);
+            let obj = addJsonModel(sceneObjs[i].url, sceneObjs[i].name, pos, sceneObjs[i].scale, sceneObjs[i].animations);
     }
 }
 
