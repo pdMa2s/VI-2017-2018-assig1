@@ -41,9 +41,11 @@ class ObjectCollection {
     }
 
     addAnimation(name, animation) {
+        alert("objs length" + this.objs.length);
         for (var i = 0; i < this.objs.length; i++) {
             if (this.objs[i].getName() === name) {
                 this.objs[i].addAnimation(animation);
+
                 return true;
             }
         }
@@ -52,7 +54,6 @@ class ObjectCollection {
 
     getSortedAnimations() {
         this.sortedAnimations = this.getAnimationArray();
-
         let nrAnimations = this.sortedAnimations.length;
         let k;
         for (let i = nrAnimations; i >= 0; i--) {
@@ -63,6 +64,9 @@ class ObjectCollection {
                 }
             }
         }
+        /*for(let x = 0 ; x < this.sortedAnimations.length; x++){
+            console.log(JSON.stringify(this.sortedAnimations[x].getJson()));
+        }*/
 
         return this.sortedAnimations;
     }

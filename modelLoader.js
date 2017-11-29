@@ -13,8 +13,11 @@ function addObj(name, scale, url, texture, pos, animations = null) {
     obj.setTexture(texture);
     objCollection.addSceneObject(obj);
     if (animations !== null) {
+
         importAnimations(obj, animations);
+        animatorAnims = objCollection.getSortedAnimations();
     }
+
 }
 
 
@@ -65,6 +68,7 @@ function importAnimations(obj, animations) {
         if (animations[i].animation.type === "rotation") {
             ani.rotation(animations[i].animation.axis.x, animations[i].animation.axis.y, animations[i].animation.axis.z);
         }
+
         else {
             var trajPos = [];
             for (var j = 0; j < animations[i].animation.pos.length; j++) {
@@ -79,7 +83,6 @@ function importAnimations(obj, animations) {
             //ani.trajectory(trajPositions, line);
 
         }
-        obj.addAnimation(ani);
         objCollection.addAnimation(obj.name, ani);
     }
 }
