@@ -21,7 +21,7 @@ function removeAmin(obj) {
 }
 function createRotation() {
 
-    var animation = new Animation(selected_object,animationDuration, animationId);
+    var animation = new Animation(selected_object, animationDuration, animationId);
     animation.rotation(rX, rY, rZ);
     objCollection.addAnimation(selected_object.name, animation);
     addAnimatorAnis(animation);
@@ -57,9 +57,10 @@ function translateObject(obj, animation) {
         //object.position.copy(spline.getPointAt(t));
         pt = spline.getPointAt(t);
         obj.position.set(pt.x, pt.y, pt.z);
+        console.log(obj);
 
         // get the tangent to the curve
-        //tangent = spline.getTangent(t).normalize();
+        tangent = spline.getTangent(t).normalize();
 
         // calculate the axis to rotate around
         //axis.crossVectors(up, tangent).normalize();
@@ -68,6 +69,7 @@ function translateObject(obj, animation) {
         //radians = Math.acos(up.dot(tangent));
 
         // set the quaternion
+
         //obj.quaternion.setFromAxisAngle(axis, radians);
         t += 1 / (duration * fps);
 
@@ -147,11 +149,6 @@ function createTrajectory() {
             objCollection.addAnimation(selected_object.name, animation);
             addAnimatorAnis(animation);
             animationId++;
-            //meter pos em vez de esferas
-            //generateTrajectoryLine(selected_object);
-            //chamar a cena animation.cenas e passar pos
-            // tirar elemento do objects esferas tbm para nao ser possivel mudar a pos
-            // ver se traje pos > 1
         }
     }
 

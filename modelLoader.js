@@ -72,12 +72,12 @@ function importAnimations(obj, animations) {
 
         else {
             var trajPos = [];
-
             if (i > 0) {
                 var nAnteriorPos = animations[i - 1].animation.pos.length;
                 var lastPosition = animations[i - 1].animation.pos[nAnteriorPos - 1];
                 trajPos.push(new THREE.Vector3(lastPosition.x, lastPosition.y, lastPosition.z));
             }
+
 
             for (var j = 0; j < animations[i].animation.pos.length; j++) {
                 trajPos.push(new THREE.Vector3(animations[i].animation.pos[j].x, animations[i].animation.pos[j].y,
@@ -87,7 +87,7 @@ function importAnimations(obj, animations) {
 
             var line = generateTrajectoryLineFromJSON(obj, trajPos);
 
-            //ani.trajectory(trajPos, line);
+            ani.trajectory(trajPos, line);
 
         }
         objCollection.addAnimation(obj.name, ani);
@@ -106,12 +106,12 @@ function generateTrajectoryLineFromJSON(obj, points) {
     var lineMaterial = new THREE.LineBasicMaterial({linewidth: 2});
 
     var line = new THREE.Line(geometry, lineMaterial);
-    line.material.color = new THREE.Color(0xe6194b);
+    //line.material.color = new THREE.Color(0xe6194b);
 
     var nTraj = obj.getNumberOfTrajectories();
     alert(nTraj);
 
-    /*
+
     if (nTraj < trajectoryColors.length) {
         line.material.color = trajectoryColors[nTraj];
     }
@@ -119,7 +119,7 @@ function generateTrajectoryLineFromJSON(obj, points) {
     else {
         line.material.color = trajectoryColors[nTraj % trajectoryColors.length];
     }
-    */
+
 
     scene.add(line);
     return spline;
