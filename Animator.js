@@ -9,6 +9,7 @@ var t = 0;
 var fps = 60;
 var animatorAnims = [];
 var animationId = 1;
+
 function addAnimatorAnis(anim) {
     animatorAnims.push(anim);
 }
@@ -53,29 +54,19 @@ function translateObject(obj, animation) {
 
         var spline = animation.json.animation.line;
 
-        // set the marker position
-        //object.position.copy(spline.getPointAt(t));
         pt = spline.getPointAt(t);
         obj.position.set(pt.x, pt.y, pt.z);
-        console.log(obj);
 
-        // get the tangent to the curve
         tangent = spline.getTangent(t).normalize();
 
-        // calculate the axis to rotate around
         axis.crossVectors(up, tangent).normalize();
 
-        // calcluate the angle between the up vector and the tangent
         radians = Math.acos(up.dot(tangent));
-
-        // set the quaternion
 
         obj.quaternion = new THREE.Quaternion();
         obj.quaternion.setFromAxisAngle(axis, radians);
         t += 1 / (duration * fps);
 
-        // 60fps -> 60 incrementos - 1 segundo
-        // 3 segundos - 180 incrementos  t = [0,1]  1 / 180 = 0.005555555555555556
         return false;
     }
 
@@ -93,8 +84,6 @@ function rotateObject(obj, prevTime, animation) {
     var now = date.getTime();
     var fps = animationTime * 20;
     var animationMillis = animationTime * 1000;
-    //console.log(JSON.stringify(animation.getJson()) );
-    //console.log( animationMillis);
 
     if ((now - prevTime) <= animationMillis){ //|| rotated((rX / fps), (rY / fps), (rZ / fps))) {
         var axis = animation.getRotationAxis();
