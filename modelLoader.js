@@ -71,12 +71,18 @@ function importAnimations(obj, mesh, animations) {
 
         else {
             var trajPos = [];
-            if (i > 0) {
-                var nAnteriorPos = animations[i - 1].animation.pos.length;
-                var lastPosition = animations[i - 1].animation.pos[nAnteriorPos - 1];
-                trajPos.push(new THREE.Vector3(lastPosition.x, lastPosition.y, lastPosition.z));
-            }
 
+            if (i > 0) {
+                for (var k = animations.length - 2; k >= 0; k--) {
+                    var anim = animations[k];
+                    if (anim.animation.type === "trajectory") {
+                        var nAnteriorPos = anim.animation.pos.length;
+                        var lastPosition = anim.animation.pos[nAnteriorPos - 1];
+                        trajPos.push(new THREE.Vector3(lastPosition.x, lastPosition.y, lastPosition.z));
+                        break;
+                    }
+                }
+            }
 
             for (var j = 0; j < animations[i].animation.pos.length; j++) {
                 trajPos.push(new THREE.Vector3(animations[i].animation.pos[j].x, animations[i].animation.pos[j].y,
@@ -132,11 +138,8 @@ function addObjModel(model, material = null) {
     var loader = new THREE.OBJLoader();
 
     loader.load(
-        // resource URL
         model,
 
-        // pass the loaded data to the onLoad function.
-        //Here it is assumed to be an object
         function (obj) {
             //add the loaded object to the scene
             if (material != null) {
@@ -153,14 +156,11 @@ function addObjModel(model, material = null) {
             count++;
         },
 
-        // Function called when download progresses
         function (xhr) {
             console.log((xhr.loaded / xhr.total * 100) + '% loaded');
         },
 
-        // Function called when download errors
         function (xhr) {
-            //alert( 'Error laoding object' );
             addJsonModel(model);
         }
     );
@@ -267,9 +267,6 @@ function createCar(geometry, url, car) {
 
     var mesh = new THREE.Mesh(geometry, m);
 
-    /*mesh.rotation.x = r[ 0 ];
-    mesh.rotation.y = r[ 1 ];
-    mesh.rotation.z = r[ 2 ];*/
 
     mesh.scale.x = mesh.scale.y = mesh.scale.z = s;
     var name = car + "_" + count;
@@ -280,11 +277,6 @@ function createCar(geometry, url, car) {
     scene.add(mesh);
 
     CARS[car].object = mesh;
-
-    //CARS[ car ].buttons = createButtons( materials.body, car );
-    //attachButtonMaterials( materials.body, m, bm, car );
-
-    //switchCar( car );
 
 }
 
@@ -666,6 +658,5 @@ function addFloor(type) {
             scene.add(pooledFloorObjects[2]);
             break;
     }
-
 
 }

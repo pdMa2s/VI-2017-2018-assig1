@@ -64,9 +64,6 @@ class ObjectCollection {
                 }
             }
         }
-        /*for(let x = 0 ; x < this.sortedAnimations.length; x++){
-            console.log(JSON.stringify(this.sortedAnimations[x].getJson()));
-        }*/
 
         return this.sortedAnimations;
     }

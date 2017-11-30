@@ -33,8 +33,6 @@ function importObjs(sceneObjs) {
             default:
                 alert("Invalid imported model");
         }
-        //addObj(sceneObjs[i].name, sceneObjs[i].scale, sceneObjs[i].url, sceneObjs[i].texture, pos);
-
     }
 }
 
