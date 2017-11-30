@@ -91,7 +91,7 @@ function rotateObject(obj, prevTime, animation) {
 
     var date = new Date();
     var now = date.getTime();
-    var fps = animationTime * 20;
+    var fps = animationTime * 30;
     var animationMillis = animationTime * 1000;
     //console.log(JSON.stringify(animation.getJson()) );
     //console.log( animationMillis);
