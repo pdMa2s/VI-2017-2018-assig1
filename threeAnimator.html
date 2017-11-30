@@ -181,7 +181,7 @@ window.onbeforeunload = function (event) {
             'name': selected_object === undefined ? "" : selected_object.name,
             'scale': 0.5,
             'duration' : 1,
-            'add Rotation': createRotation,
+            'save Rotation': createRotation,
             'import .obj': "",
             'import json': "",
             'show obj animations': displayObjectAnimations,
@@ -256,7 +256,7 @@ window.onbeforeunload = function (event) {
         folder2.add(settings, 'rotation_z').min(-1).max(1).step(step).name('Rotation Z axis').onChange(function (value) {
             rZ = value;
         });
-        folder2.add(settings, 'add Rotation');
+        folder2.add(settings, 'save Rotation');
         //folder2.open();
 
         var folder3 = panel.addFolder('Selected object settings');

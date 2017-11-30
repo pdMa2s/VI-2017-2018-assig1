@@ -6,7 +6,7 @@ function importScene(jsonString) {
         var sceneProperties = JSON.parse(jsonString);
 
         scene.background.setHSL(sceneProperties.sceneBackground.h, sceneProperties.sceneBackground.s,
-        sceneProperties.sceneBackground.l);
+            sceneProperties.sceneBackground.l);
 
         addFloor(sceneProperties.floorType);
 
@@ -21,9 +21,23 @@ function importScene(jsonString) {
 
 function importObjs(sceneObjs) {
     for (let i = 0; i < sceneObjs.length; i++) {
-            let pos = position(sceneObjs[i].position.x, sceneObjs[i].position.y, sceneObjs[i].position.z);
-            let obj = addJsonModel(sceneObjs[i].url, sceneObjs[i].name, pos, sceneObjs[i].scale, sceneObjs[i].animations);
+        let pos = position(sceneObjs[i].position.x, sceneObjs[i].position.y, sceneObjs[i].position.z);
+
+        switch (parseName(sceneObjs[i].name)) {
+            case "horse":
+            case "parrot":
+            case "stork":
+            case "flamingo":
+                let obj = addJsonModel(sceneObjs[i].url, sceneObjs[i].name, pos, sceneObjs[i].scale, sceneObjs[i].animations);
+                break;
+            default:
+                alert("Invalid imported model");
+        }
     }
+}
+
+function parseName(name) {
+    return name.split("_")[0];
 }
 
 function position(xCord, yCord, zCord) {

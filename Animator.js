@@ -82,7 +82,7 @@ function rotateObject(obj, prevTime, animation) {
 
     var date = new Date();
     var now = date.getTime();
-    var fps = animationTime * 20;
+    var fps = animationTime * 55;
     var animationMillis = animationTime * 1000;
 
     if ((now - prevTime) <= animationMillis){ //|| rotated((rX / fps), (rY / fps), (rZ / fps))) {

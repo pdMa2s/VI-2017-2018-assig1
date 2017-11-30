@@ -71,12 +71,18 @@ function importAnimations(obj, mesh, animations) {
 
         else {
             var trajPos = [];
-            if (i > 0) {
-                var nAnteriorPos = animations[i - 1].animation.pos.length;
-                var lastPosition = animations[i - 1].animation.pos[nAnteriorPos - 1];
-                trajPos.push(new THREE.Vector3(lastPosition.x, lastPosition.y, lastPosition.z));
-            }
 
+            if (i > 0) {
+                for (var k = animations.length - 2; k >= 0; k--) {
+                    var anim = animations[k];
+                    if (anim.animation.type === "trajectory") {
+                        var nAnteriorPos = anim.animation.pos.length;
+                        var lastPosition = anim.animation.pos[nAnteriorPos - 1];
+                        trajPos.push(new THREE.Vector3(lastPosition.x, lastPosition.y, lastPosition.z));
+                        break;
+                    }
+                }
+            }
 
             for (var j = 0; j < animations[i].animation.pos.length; j++) {
                 trajPos.push(new THREE.Vector3(animations[i].animation.pos[j].x, animations[i].animation.pos[j].y,
